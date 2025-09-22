@@ -1,0 +1,20 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import { site } from '@/config/site';
+---
+<html lang="ja">
+  <SeoHead title="登校サポート – WHOLE LIFE" />
+  <body>
+    <Header />
+    <main class="section py-16">
+      <h1 class="text-3xl font-bold">登校サポート</h1>
+      <p class="mt-4 text-base-900/80">外部サイトへ移動して詳細をご案内します。</p>
+      <a class="btn-primary mt-6 inline-flex" href={site.external.schoolSupport}>外部サイトへ</a>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

@@ -1,0 +1,41 @@
+---
+const faqs = [
+  {
+    q: '初心者でも受講できますか？',
+    a: 'はい、初心者の方も安心して受講いただけます。基礎から丁寧に解説し、段階的に学べるカリキュラムを用意していますので、専門知識がなくても理解できるよう工夫されています。'
+  },
+  {
+    q: '受講に必要なものは何ですか？',
+    a: 'インターネット環境とPC、タブレット、またはスマートフォンがあれば受講可能です。特別なソフトウェアは必要ありません。ブラウザからアクセスして学習できます。'
+  },
+  {
+    q: '仕事や育児で忙しいのですが、自分のペースで進められますか？',
+    a: 'はい、すべての講座はオンラインで、好きな時間に何度でも視聴可能です。ご自身のペースで学習を進めていただけます。'
+  },
+  {
+    q: '講座を受けることで、どんな変化がありますか？',
+    a: '自分の思考や感情を整理する力がつき、人間関係や仕事でのストレス対応が楽になったという声を多くいただいています。'
+  },
+  {
+    q: '他の講座と何が違うのですか？',
+    a: '私たちの講座は、教科書の内容をなぞるだけではありません。少人数の対話形式で進めることで、実際の場面で使えるスキルをとことん実践的に学んでいただきます。受講後に、自分自身の変化を楽しみにしていてください。'
+  },
+];
+---
+
+<section id="faq" class="section py-20 max-w-3xl text-center">
+  <h2 class="text-2xl font-semibold text-base-900 sm:text-3xl">よくある質問</h2>
+  <div class="mt-8 divide-y divide-base-900/10 rounded-2xl bg-white ring-1 ring-black/5 shadow-card">
+    {faqs.map((f) => (
+      <details class="group open:bg-base-100">
+        <summary class="cursor-pointer list-none px-6 py-4 text-[15px] font-medium text-base-900">
+          {f.q}
+        </summary>
+        <div class="px-6 pb-5 text-[15px] leading-7 text-base-900/70">{f.a}</div>
+      </details>
+    ))}
+  </div>
+  
+</section>
+
+

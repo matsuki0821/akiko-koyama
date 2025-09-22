@@ -1,0 +1,52 @@
+---
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import voices from '@/data/voices.json';
+import VoiceThumbCard from '@/components/cards/VoiceThumbCard.astro';
+
+const toAgeGender = (title: string): string => (title || '').split('・')[0] || title || '';
+---
+<html lang="ja">
+  <SeoHead title="デジタルアンケート｜受講者の声" description="受講者の声（デジタルアンケート）をQ&A形式で掲載しています。" />
+  <body>
+    <Header />
+    <main class="section py-12">
+      <h1 class="text-3xl font-bold">デジタルアンケート</h1>
+      <p class="mt-3 text-base-900/70">カードをクリックすると詳細Q&Aへ移動します。</p>
+
+      <section class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {voices.map((v, idx) => {
+          const catchphrase = v.slug === 'wholelife-customer-voice-02'
+            ? '過去の経験が今も影響していると感じる方'
+            : v.slug === 'wholelife-customer-voice-03'
+              ? '夫とのギスギスが8割減りました'
+              : v.slug === 'wholelife-customer-voice-05'
+                ? '夫との衝突が減り、気持ちを素直に伝えられるように'
+                : v.slug === 'wholelife-customer-voice-06'
+                  ? '相手を決めつけず、イライラしなくなった自分に驚き'
+                  : v.slug === 'wholelife-customer-voice-07'
+                    ? '性格だと思っていた悩みも、学びで変えられると実感'
+                    : idx === 0
+                      ? '怒鳴ってしまう日も、素直に謝れる自分に変わりました'
+                      : (v.summary || '');
+          return (
+            <VoiceThumbCard
+              href={`/reviews/digital/${v.slug}`}
+              ageGender={toAgeGender(v.title)}
+              catchphrase={catchphrase}
+              highlight={v.slug === 'wholelife-customer-voice-02' ? '過去の経験が今も影響' : (v.slug === 'wholelife-customer-voice-03' ? '8割' : (v.slug === 'wholelife-customer-voice-04' ? '自分が変わる' : (v.slug === 'wholelife-customer-voice-05' ? '気持ちを素直に伝えられる' : undefined)))}
+              highlights={v.slug === 'wholelife-customer-voice-06' ? ['相手を決めつけず', '驚き'] : (v.slug === 'wholelife-customer-voice-07' ? ['性格', '学び'] : (idx === 0 ? ['怒鳴ってしまう', '素直に謝れる'] : undefined))}
+              textSizeClass={v.slug === 'wholelife-customer-voice-02' ? 'text-[22px]' : undefined}
+              avatarSrc="/slide1-v2.jpg"
+              avatarAlt="thumb"
+            />
+          );
+        })}
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

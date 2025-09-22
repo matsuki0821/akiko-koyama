@@ -1,0 +1,35 @@
+---
+import { site } from '@/config/site';
+---
+<footer class="mt-20 bg-[#181818] text-white">
+  <div class="section py-14 text-sm">
+    <div class="flex flex-col items-center gap-6">
+      <div class="text-center">
+        <div class="font-extrabold tracking-wider text-white/90 text-xl">WHOLE LIFE</div>
+        <p class="mt-2 font-bold text-white/90 text-[19px]">コミュニケーショントレーニングで日本の未来を支える</p>
+      </div>
+
+      <nav class="flex flex-wrap items-center justify-center gap-4 text-white">
+        <a href="/privacy" class="text-white hover:text-white transition-colors">プライバシーポリシー</a>
+        <span class="text-white/30">|</span>
+        <a href="/terms" class="text-white hover:text-white transition-colors">反社会的勢力排除宣言</a>
+        <span class="text-white/30">|</span>
+        <a href="/security" class="text-white hover:text-white transition-colors">情報セキュリティ基本方針</a>
+        <span class="text-white/30">|</span>
+        <a href="/sitemap.xml" class="text-white hover:text-white transition-colors">サイトマップ</a>
+        <span class="text-white/30">|</span>
+        
+      </nav>
+
+      <div class="flex items-center gap-4 text-white">
+        <a aria-label="Instagram" href={site.external.instagram} target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full p-1.5 ring-1 ring-white/10 hover:ring-white/30 transition">
+          <img src="/images/icons/instagram.svg" alt="Instagram" class="h-7 w-7" width="28" height="28" loading="lazy" decoding="async" />
+        </a>
+      </div>
+
+      <p class="mt-2 text-center text-white">© {new Date().getFullYear()} WHOLE LIFE</p>
+    </div>
+  </div>
+</footer>
+
+

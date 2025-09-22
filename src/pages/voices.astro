@@ -1,0 +1,194 @@
+---
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import voices from '@/data/voices.json';
+// 手書きアンケートは画像がある2件のみ掲載
+const handwrittenSlugs = ['wholelife-customer-voice-01', 'wholelife-customer-voice-02'];
+const handwrittenVoices = (voices as any[]).filter((v) => handwrittenSlugs.includes(v.slug));
+---
+<html lang="ja">
+  <SeoHead title="受講者の声 | WHOLE LIFE認定講座" description="WHOLE LIFE認定講座を受講した方々の体験談・成果をご紹介します。実践的なスキルを学び、家庭や職場で活用できた事例が多数あります。" />
+  <body>
+    <Header />
+    <section class="section py-12">
+      <h1 class="text-3xl font-bold text-center mb-10">受講者の声</h1>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {handwrittenVoices.map((voice) => (
+          <div class="bg-white rounded-xl shadow-card p-4 space-y-4 border border-black/10">
+            <h3 class="text-lg font-bold">{voice.title}</h3>
+            <p class="text-sm text-base-900/70">
+              受講理由：{voice.reason}<br />
+              {voice.period}<br />
+              成果：{voice.result}
+            </p>
+
+            <p class="text-base-900/90 text-sm leading-relaxed">{voice.summary}</p>
+
+            <div
+              class="relative"
+              data-slider
+              data-slug={voice.slug}
+              data-pages={voice.pages}
+              aria-roledescription="carousel"
+              aria-label={`${voice.title} アンケート画像スライダー`}
+            >
+              <img
+                data-img
+                src={`/voice/${voice.slug}/p1.webp`}
+                alt={`${voice.title} 認定講座 受講者アンケート 1 / ${voice.pages}`}
+                class="rounded-lg shadow w-full select-none cursor-zoom-in"
+                loading="lazy"
+                decoding="async"
+              />
+              <button
+                type="button"
+                data-prev
+                class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-2 py-1 text-sm shadow ring-1 ring-black/10 hover:bg-white"
+                aria-label="前の画像"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                data-next
+                class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-2 py-1 text-sm shadow ring-1 ring-black/10 hover:bg-white"
+                aria-label="次の画像"
+              >
+                ›
+              </button>
+              <div class="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1">
+                {Array.from({ length: voice.pages }).map((_, i) => (
+                  <span class="h-1.5 w-1.5 rounded-full bg-black/20" data-dot data-index={i + 1}></span>
+                ))}
+              </div>
+            </div>
+
+            <a
+              href={`/voice/${voice.slug}/`}
+              class="block w-full text-center bg-primary hover:opacity-90 text-white py-2 rounded-lg shadow"
+            >
+              詳細を見る
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+    <!-- 画像スライダー（カード内） -->
+    <script is:inline>
+      (() => {
+        const sliders = document.querySelectorAll('[data-slider]');
+        sliders.forEach((root) => {
+          const slug = root.getAttribute('data-slug');
+          const pages = Number(root.getAttribute('data-pages') || '1');
+          const img = root.querySelector('[data-img]');
+          const prev = root.querySelector('[data-prev]');
+          const next = root.querySelector('[data-next]');
+          const dots = Array.from(root.querySelectorAll('[data-dot]'));
+          let index = 1;
+          const update = () => {
+            if (!img) return;
+            img.setAttribute('src', `/voice/${slug}/p${index}.webp`);
+            img.setAttribute('alt', `${root.getAttribute('aria-label')} ${index} / ${pages}`);
+            img.setAttribute('data-index', String(index));
+            root.setAttribute('data-current', String(index));
+            dots.forEach((d, i) => d.style.opacity = i + 1 === index ? '1' : '.4');
+          };
+          prev?.addEventListener('click', () => { index = index - 1 < 1 ? pages : index - 1; update(); });
+          next?.addEventListener('click', () => { index = index + 1 > pages ? 1 : index + 1; update(); });
+          // キーボード操作（カードにフォーカス時）
+          root.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prev?.click(); }
+            if (e.key === 'ArrowRight') { e.preventDefault(); next?.click(); }
+          });
+          // 画像クリックでライトボックスを開く
+          img?.addEventListener('click', () => {
+            const current = Number(root.getAttribute('data-current') || '1');
+            window.dispatchEvent(new CustomEvent('open-voice-lightbox', { detail: { slug, pages, index: current } }));
+          });
+          // 初期状態
+          update();
+        });
+      })();
+    </script>
+
+    <!-- ライトボックス（拡大表示＋スライド＋簡易ズーム） -->
+    <div id="voice-lightbox" class="fixed inset-0 z-[70] hidden bg-black/80 p-4">
+      <div class="relative mx-auto grid h-full max-w-6xl place-items-center">
+        <button id="lb-close" aria-label="閉じる" class="absolute right-0 top-0 m-4 rounded-full bg-white/90 px-3 py-1 text-sm text-base-900 shadow">× 閉じる</button>
+        <button id="lb-prev" aria-label="前へ" class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-lg shadow">‹</button>
+        <button id="lb-next" aria-label="次へ" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-lg shadow">›</button>
+        <div id="lb-stage" class="relative max-h-[90vh] w-full max-w-5xl overflow-hidden cursor-zoom-in">
+          <img id="lb-img" alt="voice image" class="mx-auto select-none" style="max-height:90vh; transform-origin:center center;" />
+        </div>
+        <div id="lb-dots" class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1"></div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (() => {
+        const modal = document.getElementById('voice-lightbox');
+        const img = document.getElementById('lb-img');
+        const stage = document.getElementById('lb-stage');
+        const dotsWrap = document.getElementById('lb-dots');
+        const prev = document.getElementById('lb-prev');
+        const next = document.getElementById('lb-next');
+        const closeBtn = document.getElementById('lb-close');
+        let slug = '';
+        let pages = 1;
+        let index = 1;
+        let scale = 1, tx = 0, ty = 0;
+
+        const applyTransform = () => {
+          if (!img) return;
+          img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+        };
+        const updateImg = () => {
+          if (!img) return;
+          img.src = `/voice/${slug}/p${index}.webp`;
+          if (dotsWrap) {
+            dotsWrap.innerHTML = Array.from({ length: pages }, (_, i) => `<span class=\"h-1.5 w-1.5 rounded-full ${i+1===index?'bg-white':'bg-white/50'} block\"></span>`).join('');
+          }
+          // ズーム状態を初期化
+          scale = 1; tx = 0; ty = 0; applyTransform();
+        };
+        const open = (s, p, i) => {
+          slug = s; pages = p; index = i || 1; updateImg();
+          modal?.classList.remove('hidden');
+        };
+        const close = () => { modal?.classList.add('hidden'); };
+
+        // ナビゲーション
+        prev?.addEventListener('click', () => { index = index - 1 < 1 ? pages : index - 1; updateImg(); });
+        next?.addEventListener('click', () => { index = index + 1 > pages ? 1 : index + 1; updateImg(); });
+        closeBtn?.addEventListener('click', close);
+        modal?.addEventListener('click', (e) => { if (e.target === modal) close(); });
+        // 画像以外（余白）クリックで閉じる
+        stage?.addEventListener('click', (e) => { if (e.target === stage) close(); });
+        window.addEventListener('keydown', (e) => { if (modal?.classList.contains('hidden')) return; if (e.key==='Escape') close(); if (e.key==='ArrowLeft') prev?.click(); if (e.key==='ArrowRight') next?.click(); });
+
+        // ズーム（クリックで1↔2倍）とドラッグ移動
+        img?.addEventListener('click', () => { scale = scale === 1 ? 2 : 1; if (scale === 1) { tx = 0; ty = 0; } applyTransform(); });
+        let dragging = false, sx = 0, sy = 0;
+        const onDown = (x, y) => { if (scale === 1) return; dragging = true; sx = x - tx; sy = y - ty; };
+        const onMove = (x, y) => { if (!dragging) return; tx = x - sx; ty = y - sy; applyTransform(); };
+        const onUp = () => { dragging = false; };
+        stage?.addEventListener('mousedown', (e) => onDown(e.clientX, e.clientY));
+        window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+        window.addEventListener('mouseup', onUp);
+        stage?.addEventListener('touchstart', (e) => { const t=e.touches[0]; onDown(t.clientX, t.clientY); }, { passive: true });
+        window.addEventListener('touchmove', (e) => { const t=e.touches[0]; onMove(t.clientX, t.clientY); }, { passive: true });
+        window.addEventListener('touchend', onUp);
+
+        // カード側からのオープンイベント
+        window.addEventListener('open-voice-lightbox', (ev) => {
+          const d = ev.detail || {}; open(d.slug, Number(d.pages||1), Number(d.index||1));
+        });
+      })();
+    </script>
+    <Footer />
+  </body>
+</html>
+
+

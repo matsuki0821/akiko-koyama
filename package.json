@@ -1,0 +1,33 @@
+{
+  "name": "portfolio-manus-like",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "npm run compress:pdf && npm run compress:img",
+    "compress:pdf": "node scripts/compress-pdf.js",
+    "compress:img": "node scripts/compress-images.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^3.1.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "astro": "^4.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.5.1",
+    "@squoosh/cli": "^0.7.1",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  }
+}

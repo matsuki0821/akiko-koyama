@@ -1,0 +1,24 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import { site } from '@/config/site';
+import Schedule from '@/components/sections/Schedule.astro';
+---
+<html lang="ja">
+  <SeoHead title="認定講座 – WHOLE LIFE" />
+  <body>
+    <Header />
+    <main>
+      <section class="section py-16">
+        <h1 class="text-3xl font-bold">認定講座</h1>
+        <p class="mt-4 text-base-900/80">外部サイトへ移動して詳細をご案内します。</p>
+        <a class="btn-primary mt-6 inline-flex" href={site.external.certCourse}>外部サイトへ</a>
+      </section>
+      <Schedule />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

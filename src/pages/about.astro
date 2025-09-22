@@ -1,0 +1,91 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import { site } from '@/config/site';
+---
+<html lang="ja">
+  <SeoHead title={`About – ${site.brand}`} description={site.description} />
+  <body>
+    <Header />
+    <main class="section py-16">
+      <header>
+        <p class="text-sm text-primary/80">{site.tagline}</p>
+        <h1 class="mt-2 text-3xl font-bold text-base-900 sm:text-4xl">{site.brand}</h1>
+        <p class="mt-4 max-w-3xl text-base-900/80">
+          家庭・職場・学校などで起こる対人トラブルの解決を専門とし、確かな成果を上げてきました。認知行動療法（CBT）と戦略的コーチングを融合したメンタルトレーニングで、これまでに <strong>3,000名以上</strong> を支援しています。
+        </p>
+      </header>
+
+      <section class="mt-10 grid grid-cols-1 items-center gap-8 sm:grid-cols-5">
+        <div class="sm:col-span-2">
+          <img
+            src="/images/instructors/instructor2.jpg"
+            alt="講師: 小山 明子"
+            width="800"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+            class="mx-auto w-full max-w-sm rounded-xl shadow-card"
+          />
+        </div>
+        <div class="sm:col-span-3">
+          <h2 class="text-xl font-semibold">講師紹介</h2>
+          <p class="mt-4 text-base-900/80">
+          <strong>小山 明子</strong> です。認知行動療法と戦略的コーチングを融合した実践で、悩みの根本解決を支援します。
+          </p>
+        </div>
+      </section>
+
+      <section class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="card p-6 text-center">
+          <div class="text-2xl font-bold text-primary">89%</div>
+          <div class="mt-1 text-sm font-medium">電話相談サイト 指名率</div>
+          <div class="mt-1 text-xs text-base-900/60">No.1</div>
+        </div>
+        <div class="card p-6 text-center">
+          <div class="text-2xl font-bold text-primary">97%</div>
+          <div class="mt-1 text-sm font-medium">登校サポート 再登校率</div>
+          <div class="mt-1 text-xs text-base-900/60">No.1</div>
+        </div>
+        <div class="card p-6 text-center">
+          <div class="text-2xl font-bold text-primary">No.1</div>
+          <div class="mt-1 text-sm font-medium">行動計画コーチング 年間個人売上</div>
+          <div class="mt-1 text-xs text-base-900/60">実績</div>
+        </div>
+      </section>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold">プロフィール</h2>
+        <ul class="mt-4 space-y-2">
+          <li class="flex gap-2"><span class="text-primary">✓</span><span>電話相談サイト 指名率89％で No.1</span></li>
+          <li class="flex gap-2"><span class="text-primary">✓</span><span>登校サポート団体 再登校率97％で No.1</span></li>
+          <li class="flex gap-2"><span class="text-primary">✓</span><span>行動計画コーチング 年間個人売上 No.1</span></li>
+        </ul>
+        <div class="prose prose-neutral mt-6 max-w-none">
+          <p>
+            18歳で単身渡米し、海外でカウンセリングと教育を学習。複数の国で得た実践経験を活かし、文化や背景を問わない柔軟なサポートを提供しています。理論だけでなく、実践的なスキルを重視し、「悩みの根本に向き合い、持続可能な解決へ導く」を理念として、クライアントの本質的な変化をサポートし続けています。
+          </p>
+        </div>
+      </section>
+
+      <section class="mt-12">
+        <!-- プロジェクトを見る ボタンを削除 -->
+        <a href="/contact" class="btn-cta">無料で相談する</a>
+      </section>
+    </main>
+
+    <script type="application/ld+json">
+      {JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: '小山 明子',
+        alternateName: 'Akiko Koyama',
+        description: site.description,
+      })}
+    </script>
+    <Footer />
+  </body>
+</html>
+
+

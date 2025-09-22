@@ -1,0 +1,204 @@
+---
+import fs from 'fs';
+import voices from '@/data/voices.json';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+const { slug } = Astro.params;
+
+export async function getStaticPaths() {
+  const list = (voices as any[]) || [];
+  return list.map((v) => ({ params: { slug: v.slug } }));
+}
+
+export const prerender = true;
+
+const current = (voices as any[]).find((v) => v.slug === slug);
+const isDigital = new Set(['wholelife-customer-voice-01','wholelife-customer-voice-02']).has(slug);
+const isSecond = slug === 'wholelife-customer-voice-02';
+// 手書き詳細のQ&Aをボックス表示で扱えるように配列化
+type QA = { q: string; a: string };
+const qaList: QA[] = isSecond
+  ? [
+      {
+        q: '講座の満足度を教えてください。',
+        a: '「5: とても満足」から「1: 不満」の5段階評価で、最も近い数字を1つお選びください。\n\n講座全体の満足度： 5',
+      },
+      {
+        q: '講座を受けようと思った理由、決め手についてお聞かせください。',
+        a: '自分の育児に自信がなく悩んでいたところ、インスタであきさんの講座のことを知りました。',
+      },
+      {
+        q: '受講する前は、どのようなことで悩んでいましたか？',
+        a: '子育ての方向性で悩んでいました。\n自分自身が親との関わりが少なかったので、子供にどう接するのが正解なのかわからず、毎日悩みながら過ごしていました。',
+      },
+      {
+        q: '講座を受ける前と後で、考え方や行動にどのような変化がありましたか？',
+        a: '講座を受ける前は、いつも「なぜか」不安な毎日を過ごしていました。子供の悩みもあるけれど、そこまで大きな問題はなく、夫との関係も良好なのに、いつも得体の知れない不安感がありました。\n\n講座を受けた後は自分自身のことが良く理解できたのがすごく良かったと思います。思考の歪みや、なぜ不安を感じていたのかが分かり、講座で学んだコミュニケーションのとり方などを実践していくうちに相手の反応も今までは分からなかったことに気付き、ありがたさを感じました。\n\n子供もこの2か月間でとても良い変化がありました。前よりもいろいろなことに挑戦しようとしてみたり、一人で登校できなかったのができるようになったこと、また自分の気持ちや意見を一生けんめいに伝えようとしてみたり、そんな子供の変化を感じるたびに私自身もだんだん自信がついてきて前向きな考え方に変わってきました。',
+      },
+      {
+        q: '「独学とはここが違う！」と感じた、この講座のおすすめポイントを教えてください。',
+        a: '今まではユーチューブや育児書など読んだりして何となく頭では分かっていても、行動に移すことはありませんでした。\n今回この講座を受けてみて感じたのは、とにかく講師の知識がすごいです。2時間の講座でとても内容も濃く、もっと話を聞きたい、さっそく実践してみよう！とわくわくしていました。\nあとは講座仲間との対話しながら学びを実践していくいのも、より理解が深まった気がします。私は最初から最後まで緊張してなかなかうまく話を広げられなかったんですが、講師や仲間がやさしく受け答えしてくださって本当に助かっていました。\n講師からのフィードバックも、いろんな視点から的確な返答をいただき、毎回腑に落ちる感覚でした。',
+      },
+      {
+        q: 'もし同じように悩んでいる方がいたら、どのようなメッセージを伝えますか？',
+        a: '私のように自分の問題に気付いていなかったり、心を閉ざして不安や寂しさをかかえている人がいたら、ぜひWHOLE LIFEさんの講座を受けてほしいです。\n自分自身のトレーナーになることもできると思います。そうしたら生きていくのが今よりももっと楽しく楽になるかもしれません。\n私もまだまだこれからですが、だいぶ希望がもてました。',
+      },
+    ]
+  : [
+      {
+        q: '講座の満足度を教えてください。',
+        a: '「5: とても満足」から「1: 不満」の5段階評価で、最も近い数字を1つお選びください。\n\n講座全体の満足度： 5',
+      },
+      {
+        q: '講座を受けようと思った理由、決め手についてお聞かせください。',
+        a: '2、3年前にインスタグラムであきさんと出会い、そこからずっと発信を拝見していました。\n不登校支援での実績がすごくて、どうしたらそんなことができるんだろう！？と。さらに子どもを性犯罪から守るための発信など、今のわたしにとってとても興味深いものでした。\n\nあきさん自身の、昔は口喧嘩をよくしていたけれど、コミュニケーションの取り方を変えることで夫婦関係がとても良くなった、というエピソードを知ったことが（我が家でも変わらないといけない！）と決め手になりました。\n娘と友達の習い事への意欲もすごくて、真似できたらいいのにな！と思いました。',
+      },
+      {
+        q: '受講する前は、どのようなことで悩んでいましたか？',
+        a: '夫に対して厳しい目で見ることが多く、よくイラついていました。\n話し合った後は明るい空気になるけれど、日によって少し軽め、少しわたしにとって嫌なことがあると、またイラついて険悪な空気が流れる…というのを繰り返していました。\n子どもに対しても厳しく当たることが多かったので、このままではきっと子どものやる気は引き出せないだろうな、と心配していました。',
+      },
+      {
+        q: '講座を受ける前と後で、考え方や行動にどのような変化がありましたか？',
+        a: '講座を受ける前は、夫が寝坊をしてきたことに、朝からイライラして過ごしていました。\nわたしより長い時間寝ているのに、寝坊した上に、しんどそうな顔で起きてくるなんて…産後のわたしのことをなんて全然考えてくれていない、自分勝手だ！という風に思って腹を立てていました。\n\n講座で学んだことで、自分の思考の癖を知り、こういう時にこういう考えが浮かぶが、事実と解釈が混ざっているので一旦落ち着こうと思えるようになりました。\n\nわたし自身が学べばじめた事を夫に共有したいと思い、話す機会を設けたのですが、そのおかげでわたしの中での勝手な解釈（夫はわたしのことを大切に思っていない）が事実ではないと知ることができました。\nその後、わたしは寝坊されたことにイラつくことはなくなり、夫も寝坊してしまった時には「ごめん」と伝えてくれるようになり、さらにその「ごめん」という言葉を素直に受け取れるようになりました。',
+      },
+      {
+        q: '「独学とはここが違う！」と感じた、この講座のおすすめポイントを教えてください。',
+        a: 'テキストの内容以外の私生活での出来事の相談や疑問にも丁寧に答えて頂けたので、テキストや講座で学んだことが私生活で活かしやすかったです。\nまた、複数人での講座だったことで、自分とは違う考え方・感覚を持った仲間の話を聞けたことは貴重なことだと考えます。\n講座では、証明されている事柄に、あきさんの臨床経験がプラスされているので、独学では到達できないところまで学べるのがめちゃくちゃ大きかったと思います。',
+      },
+      {
+        q: 'もし同じように悩んでいる方がいたら、どのようなメッセージを伝えますか？',
+        a: '夫と仲が悪いわけじゃないけど、何だかよく揉める…イラつく…\nもうちょっと協力してくれたらなぁ…何で自分のことばっかりなんだろう…\n\nそんな風に思っていたけれど、講座を受けて学びはじめたことで、自分の中にあるイラつきの原因、勝手に決めつけていた相手のことがわかってきて、ストレスが減りました。\n知的すぎず、学ばずに、これからの人生を過ごすより、知って学んで人生を過ごせるなんて、ハッピーだなぁと感じています♡',
+      },
+    ];
+
+const page = {
+  title: `WHOLE LIFE お客様の声｜${current?.title ?? slug}`,
+  description:
+    current?.summary ?? 'WHOLE LIFEの受講者アンケートを公開。実感の声をSEO対応の本文として掲載。',
+  canonical: `https://wholelife-japan.com/voice/${slug}`,
+};
+
+const imgDir = `./public/voice/${slug}`;
+const images = fs.existsSync(imgDir)
+  ? fs.readdirSync(imgDir).filter((f) => f.endsWith('.webp')).sort()
+  : [];
+---
+<html lang="ja">
+  <SeoHead title={page.title} description={page.description} />
+  <body>
+    <Header />
+    <script type="application/ld+json">
+      {JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Review',
+        itemReviewed: { '@type': 'Course', name: 'WHOLE LIFE 認定講座' },
+        author: current?.title || '匿名',
+        reviewBody: page.description,
+        url: page.canonical,
+      })}
+    </script>
+    <main class="section py-12">
+      <a href="/voices" class="inline-flex items-center gap-2 text-sm text-base-900/70 hover:text-base-900 rounded-full border border-black/10 bg-white px-3 py-1 shadow-sm">← 一覧に戻る</a>
+      <h1 class="mt-2 text-2xl font-semibold">{current?.title ?? slug}</h1>
+
+      {!isDigital && (
+        <div class="mt-4">
+          <a href={`/voice/${slug}-lite.pdf`} target="_blank" rel="noopener" class="btn-primary inline-flex">📄 お客様の声（軽量版PDF）</a>
+          <small class="ml-2 text-base-900/60">
+            <a href={`/voice/${slug}.pdf`} target="_blank" rel="noopener">高解像度</a>
+          </small>
+        </div>
+      )}
+
+      {!isDigital && (
+        <section class="mt-8 grid gap-6">
+          {images.map((name, i) => (
+            <article class="rounded-2xl bg-white shadow-card ring-1 ring-black/5 overflow-hidden">
+              <div class="relative aspect-[16/7] sm:aspect-[16/6] w-full overflow-hidden">
+                <img src={`/voice/${slug}/${name}`} alt={`WHOLE LIFE 受講者アンケート ${slug} ${i + 1}ページ目`} class="absolute inset-0 h-full w-full object-cover bg-black/5" loading="lazy" decoding="async" />
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
+
+      <!-- SEO向け要約とQ&A（画像がなくても本文が読める） -->
+      {isDigital ? (
+        <section class="mt-8">
+          <h2 class="sr-only">Q&A</h2>
+          <dl class="space-y-6">
+            {qaList.map((qa, i) => (
+              <div class="rounded-lg ring-1 ring-black/10 p-6 sm:p-7 bg-white" data-qa-index={i + 1}>
+                <dt class="text-lg sm:text-xl font-semibold text-primary tracking-[0.01em]">{`Q${i + 1}. ${qa.q}`}</dt>
+                <dd class="mt-3 text-[16px] text-base-900 leading-8 whitespace-pre-wrap">{qa.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : (
+        <section class="mt-10 grid gap-6 sm:grid-cols-2">
+          <article class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
+            <h2 class="text-xl font-semibold">要約（ポイント）</h2>
+            <ul class="mt-3 list-disc space-y-2 pl-5 text-base-900/80">
+              <li>安心感と寄り添い：子どもの気持ちに合わせた声かけで不安が和らいだ</li>
+              <li>行動の一歩：課題の分解・即時強化など家庭で試せる具体策で“やってみる”に変化</li>
+              <li>親の気づき：完璧主義を手放し、小さな前進を評価できるようになった</li>
+              <li>メッセージ：ひとりで抱え込まず、まずは試してみてほしい——前向きな推奨多数</li>
+            </ul>
+          </article>
+          <article class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
+            <h2 class="text-xl font-semibold">Qごとの要約</h2>
+            <div class="mt-3 space-y-3">
+              <div>
+                <h3 class="font-bold">Q1 受講動機</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>家庭の関わり方を学びたい</li>
+                  <li>子の行動を促す具体策を知りたい</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold">Q2 満足点</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>事例が豊富で実践に落ちる</li>
+                  <li>丁寧なフィードバックで安心</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold">Q3 役立ちポイント</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>行動を小さく分け成功体験を積む</li>
+                  <li>声かけテンプレートで迷いが減少</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold">Q4 変化・成果</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>家庭の雰囲気が落ち着いた</li>
+                  <li>登校や準備の自発性が上がった</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold">Q5 受講検討者へ</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>少しずつの前進で十分。実践すれば変化が出る</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="font-bold">Q6 同じ悩みの方へ</h3>
+                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
+                  <li>ひとりで抱え込まず、まずは試してみてほしい</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </section>
+      )}
+
+      
+    </main>
+    <Footer />
+  </body>
+  </html>
+
+

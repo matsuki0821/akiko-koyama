@@ -1,0 +1,44 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+---
+<html lang="ja">
+  <SeoHead title="私たちについて – WHOLE LIFE" />
+  <body>
+    <Header />
+    <main class="section py-20">
+      <section class="max-w-4xl mx-auto px-6">
+        <div class="text-center">
+          <span class="inline-flex items-center rounded-full bg-gold-50 text-gold-700 ring-1 ring-gold-200 px-3 py-1 text-xs font-semibold">Our Story</span>
+          <h1 class="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-base-900">私たちについて</h1>
+          <p class="mt-3 text-base-900/70">なぜ、この講座を立ち上げたのか。</p>
+        </div>
+
+        <div class="mt-10 overflow-hidden rounded-2xl bg-white ring-1 ring-black/5 shadow-card">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent pointer-events-none" />
+            <img src="/akiko-koyama-portrait.jpeg" alt="講座の背景" class="h-60 w-full object-cover sm:h-80" loading="lazy" decoding="async" />
+          </div>
+          <div class="p-6 sm:p-10">
+            <div class="prose prose-neutral max-w-none">
+              <p><strong>不安型完璧主義</strong>に悩む方々は、今もなおサポートを必要としています。</p>
+              <p>情報があふれ、自己啓発やSNSで多くの知識に触れられる時代。それでもなお、不登校、パートナーとのすれ違い、自ら命を絶ってしまう人が後を絶たない現実があります。</p>
+              <p>これは、独学だけでは本質的な改善にたどり着くのが難しいということを意味しているのではないでしょうか。私はこれまで、数多くのご家庭や個人を支援してきました。<br class="hidden sm:block"/>しかし、その数には限界があります。</p>
+              <p>だからこそ、一緒に支援を届けてくれる仲間を増やすために、この講座を始めました。</p>
+              <p>同じように悩む人たちの<strong>「人生の転機」</strong>を、あなたと一緒に支えていけたらと願っています。</p>
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a href="/contact" class="inline-flex items-center justify-center rounded-full bg-brown-700 text-white px-6 py-3 font-medium shadow hover:bg-brown-800 transition">お問い合わせ</a>
+              <a href="/reviews" class="inline-flex items-center justify-center rounded-full bg-white ring-1 ring-black/10 px-6 py-3 font-medium text-base-900 hover:bg-black/5 transition">受講者の声を見る</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

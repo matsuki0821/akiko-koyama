@@ -1,0 +1,86 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+---
+<html lang="ja">
+  <SeoHead title="お問い合わせ – WHOLE LIFE" />
+  <body>
+    <Header />
+    <main class="section py-20">
+      <header class="max-w-3xl mx-auto px-4 text-center">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">お問い合わせ</h1>
+        <p class="mt-3 text-base-900/70">下記フォームにご入力のうえ送信してください。</p>
+      </header>
+
+      <form method="POST" action="/api/contact" class="mt-10 max-w-3xl mx-auto px-4 space-y-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label class="block text-sm font-medium">お名前</label>
+            <input class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">メールアドレス</label>
+            <input type="email" class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2" required />
+          </div>
+        </div>
+
+        <fieldset class="rounded-2xl border border-black/10 p-4">
+          <legend class="px-1 text-sm font-semibold text-base-900">お問い合わせの種別</legend>
+          <div class="mt-2 grid gap-3 sm:grid-cols-2">
+            <label class="inline-flex items-center gap-2">
+              <input type="checkbox" class="h-4 w-4 rounded border-black/30" name="topics" value="next-course" />
+              <span>次回の講座開催について</span>
+            </label>
+            <label class="inline-flex items-center gap-2">
+              <input type="checkbox" class="h-4 w-4 rounded border-black/30" name="topics" value="how-to-apply" />
+              <span>お申し込み方法について</span>
+            </label>
+            <label class="inline-flex items-center gap-2">
+              <input type="checkbox" class="h-4 w-4 rounded border-black/30" name="topics" value="free-consult" />
+              <span>無料相談の依頼について</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div>
+          <label class="block text-sm font-medium">お問い合わせ内容</label>
+          <textarea rows={8} class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2" required />
+        </div>
+
+        {siteKey ? (
+          <div class="g-recaptcha" data-sitekey={siteKey}></div>
+        ) : (
+          <div class="rounded-xl border border-amber-300 bg-amber-50 text-amber-900 px-3 py-2 text-sm">
+            スパム防止（reCAPTCHA）を有効化するには、環境変数 <code>PUBLIC_RECAPTCHA_SITE_KEY</code> を設定してください。
+          </div>
+        )}
+
+        <div class="rounded-2xl bg-black/5 p-4 text-sm text-base-900/80">
+          <p>※ フォーム送信後、担当者より詳細のご案内をお送りいたします。</p>
+          <p class="mt-1">※ お支払い方法等については、メールにてご案内いたします。</p>
+          <p class="mt-1">※ ご不明な点がございましたら、<a href="mailto:info@wholelife-japan.com" class="underline">info@wholelife-japan.com</a>までお問い合わせください。</p>
+          <p class="mt-3">個人情報の取り扱いについてをご確認の上、同意いただける場合は「同意する」にチェックをして確認画面にお進みください。</p>
+        </div>
+
+        <label class="flex items-start gap-3 text-sm">
+          <input type="checkbox" required class="mt-1 h-4 w-4 rounded border-black/30" />
+          <span>
+            個人情報保護方針に同意します（<a class="underline text-primary" href="/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>）
+          </span>
+        </label>
+
+        <div class="pt-2">
+          <button class="inline-flex items-center justify-center rounded-full bg-brown-700 px-6 py-3 text-white font-semibold shadow-lg ring-1 ring-brown-700/20 hover:bg-brown-800 hover:shadow-xl transition">送信する</button>
+        </div>
+      </form>
+    </main>
+    <Footer />
+    {siteKey && (
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    )}
+  </body>
+</html>
+
+

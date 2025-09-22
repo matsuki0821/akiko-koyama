@@ -1,0 +1,89 @@
+---
+export interface Props {
+  href?: string;
+  ageGender: string; // 例: 30代女性
+  catchphrase: string; // 例: 安心感を得て、家族との関係が前向きに
+  highlight?: string; // 強調表示したいフレーズ
+  highlights?: string[]; // 複数強調
+  textSizeClass?: string; // フォントサイズ（例: text-[18px]）
+  avatarSrc?: string; // 丸い画像（任意）
+  avatarAlt?: string;
+}
+const {
+  href,
+  ageGender,
+  catchphrase,
+  highlight,
+  highlights,
+  textSizeClass = 'text-[22px]',
+  avatarSrc,
+  avatarAlt = 'thumb avatar',
+} = Astro.props as Props;
+
+// ビルド時（フロントマター）では配列データのみ整形し、描画はテンプレートで行う
+type Part = { text: string; is: boolean };
+const escapeReg = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+let parts: Part[] = [];
+if (highlights && highlights.length > 0) {
+  const re = new RegExp(`(${highlights.map(escapeReg).join('|')})`, 'g');
+  const segs = catchphrase.split(re);
+  parts = segs.map((seg) => ({ text: seg, is: highlights.includes(seg) }));
+} else {
+  if (highlight && catchphrase.includes(highlight)) {
+    const idx = catchphrase.indexOf(highlight);
+    const before = catchphrase.slice(0, idx);
+    const focus = highlight;
+    const after = catchphrase.slice(idx + highlight.length);
+    parts = [
+      { text: before, is: false },
+      { text: focus, is: true },
+      { text: after, is: false },
+    ];
+  } else {
+    parts = [{ text: catchphrase, is: false }];
+  }
+}
+---
+{href ? (
+  <a href={href} class="group block">
+    <article class="rounded-2xl bg-white ring-1 ring-black/10 shadow-card p-5 sm:p-6 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+      <header class="text-center">
+        <div class="text-[11px] uppercase tracking-widest text-base-900/50">Question</div>
+        <div class="mt-1 text-base font-semibold text-base-900">{ageGender}</div>
+      </header>
+      <div class="mt-4 text-center">
+        <h3 class={`leading-7 text-base-900/90 ${textSizeClass}`}>
+          {parts.map((p) => (p.is ? <span class="text-brown-700 font-bold">{p.text}</span> : p.text))}
+        </h3>
+      </div>
+      <footer class="mt-5 flex justify-center">
+        {avatarSrc ? (
+          <img src={avatarSrc} alt={avatarAlt} width="48" height="48" loading="lazy" decoding="async" class="h-12 w-12 rounded-full object-cover ring-1 ring-black/10" />
+        ) : (
+          <div class="h-12 w-12 rounded-full ring-1 ring-black/10 bg-base-100" aria-hidden="true"></div>
+        )}
+      </footer>
+    </article>
+  </a>
+) : (
+  <article class="rounded-2xl bg-white ring-1 ring-black/10 shadow-card p-5 sm:p-6">
+    <header class="text-center">
+      <div class="text-[11px] uppercase tracking-widest text-base-900/50">Question</div>
+      <div class="mt-1 text-base font-semibold text-base-900">{ageGender}</div>
+    </header>
+    <div class="mt-4 text-center">
+      <h3 class={`leading-7 text-base-900/90 ${textSizeClass}`}>
+        {parts.map((p) => (p.is ? <span class="text-brown-700 font-bold">{p.text}</span> : p.text))}
+      </h3>
+    </div>
+    <footer class="mt-5 flex justify-center">
+      {avatarSrc ? (
+        <img src={avatarSrc} alt={avatarAlt} width="48" height="48" loading="lazy" decoding="async" class="h-12 w-12 rounded-full object-cover ring-1 ring-black/10" />
+      ) : (
+        <div class="h-12 w-12 rounded-full ring-1 ring-black/10 bg-base-100" aria-hidden="true"></div>
+      )}
+    </footer>
+  </article>
+)}
+
+

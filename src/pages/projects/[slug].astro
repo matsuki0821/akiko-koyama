@@ -1,0 +1,32 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import { getCollection } from 'astro:content';
+// Markdown/MDXはContent Collectionsのrender()を利用
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { entry: p } }));
+}
+
+const { entry } = Astro.props as { entry: any };
+const { Content } = await entry.render();
+---
+<html lang="ja">
+  <SeoHead title={`${entry.data.title} – Project`} />
+  <body>
+    <Header />
+    <main class="section py-16">
+      <h1 class="text-3xl font-bold">{entry.data.title}</h1>
+      <p class="mt-2 text-base-900/70">{entry.data.summary}</p>
+      {entry.data.cover && <img src={entry.data.cover} alt="" loading="lazy" decoding="async" class="mt-6 aspect-video w-full rounded-xl object-cover" />}
+      <article class="prose prose-neutral mt-8 max-w-none">
+        <Content />
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

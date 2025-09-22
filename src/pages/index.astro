@@ -1,0 +1,56 @@
+---
+import '../styles/tailwind.css';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+// React版Heroは置換のため未使用
+import NewHero from '@/components/sections/Hero.astro';
+import Mission from '@/components/sections/Mission.astro';
+import Features from '@/components/sections/Features.astro';
+import SimplePromptShowcaseSticky from '@/components/sections/SimplePromptShowcaseSticky.tsx';
+import TestimonialsMasonry from '@/components/TestimonialsMasonry.astro';
+import CTA from '@/components/CTA.astro';
+import Faq from '@/components/Faq.astro';
+import Schedule from '@/components/sections/Schedule.astro';
+import Curriculum from '@/components/sections/Curriculum.astro';
+
+// no data fetch needed here; masonry component reads testimonials itself
+---
+<html lang="ja">
+  <SeoHead title="WHOLE LIFE – ポートフォリオ" description="“行ける朝”は設計です。行動分析×CBTで再現性ある支援を。" />
+  <body>
+    <Header />
+    <div class="relative isolate">
+      <NewHero />
+      <Mission />
+    </div>
+
+
+    <SimplePromptShowcaseSticky client:load
+      subtitle="家族を支えるコミュニケーションスキルを、あなたの強みに。"
+    />
+
+    <Features />
+
+    <!-- 受講者の声セクションを強調表示（上位に配置済み） -->
+    <section class="section py-16">
+      <h2 class="text-2xl sm:text-3xl font-bold text-center text-base-900">受講者の声</h2>
+      <p class="mt-2 text-center text-base-900/70">実際の変化・体験談をピックアップしてご紹介します。</p>
+      <div class="mt-8">
+        <TestimonialsMasonry />
+      </div>
+    </section>
+
+    <Schedule />
+
+    <Curriculum />
+
+    <Faq />
+
+    <CTA title="「イライラや不安に振り回されない日常を、今から始めませんか？」" primaryText="無料相談を申し込む" primaryHref="/contact" />
+
+    <Footer />
+  </body>
+</html>
+
+

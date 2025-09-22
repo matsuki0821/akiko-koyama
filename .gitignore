@@ -1,0 +1,12 @@
+﻿node_modules/
+dist/
+.astro/
+.tmp-pdf-pages/
+*.log
+dev-*.log
+astro-dev.err.log
+astro-dev.out.log
+.env
+.env.*.local
+.DS_Store
+Thumbs.db

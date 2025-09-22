@@ -1,0 +1,30 @@
+---
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SeoHead from '@/components/layout/SeoHead.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a,b)=> +new Date(b.data.date) - +new Date(a.data.date));
+---
+<html lang="ja">
+  <SeoHead title="Blog – WHOLE LIFE" />
+  <body>
+    <Header />
+    <main class="section py-16">
+      <h1 class="text-3xl font-bold">Blog</h1>
+      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map(p => (
+          <a href={`/blog/${p.slug}`} class="card overflow-hidden">
+            {p.data.cover && <img src={p.data.cover} alt="" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />}
+            <div class="p-4">
+              <h3 class="text-lg font-semibold">{p.data.title}</h3>
+              <p class="mt-1 text-sm text-base-900/70">{p.data.excerpt}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

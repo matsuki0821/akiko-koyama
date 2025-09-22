@@ -1,0 +1,23 @@
+---
+export interface Props { title?: string; description?: string; }
+const { title = 'WHOLE LIFE', description = '“行ける朝”は設計です。' } = Astro.props as Props;
+import '@/styles/tailwind.css';
+---
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).toString()} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+

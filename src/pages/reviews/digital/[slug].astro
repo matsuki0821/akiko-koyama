@@ -1,0 +1,110 @@
+---
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Button from '@/components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const data = (await import('@/data/voices.json')).default as any[];
+  return data.map((v) => ({ params: { slug: v.slug }, props: { item: v } }));
+}
+
+const { item } = Astro.props as { item: any };
+
+type Profile = { gender: string; age: string; job: string; hours: string; course: string; theme: string };
+const parseProfile = (v: any): Profile => {
+  const title: string = v.title || '';
+  const gender = title.includes('女性') ? '女性' : title.includes('男性') ? '男性' : '—';
+  const ageMatch = title.match(/(\d+代)/);
+  const age = ageMatch ? ageMatch[1] : '—';
+  const jobMatch = title.split('・')[1] || '';
+  const job = jobMatch || '—';
+  const hoursMatch = String(v.period || '').replace('受講期間：', '');
+  const hours = hoursMatch || '—';
+  const course = hoursMatch ? hoursMatch.replace(/^全/, '') + 'コース' : '—';
+  const theme = v.reason || '—';
+  return { gender, age, job, hours, course, theme };
+};
+const questions: string[] = [
+  '講座を受ける前、どんな悩みや不安がありましたか？',
+  '講座を受けた後、考え方や行動、家族への関わり方は変わりましたか？',
+  '講師のサポートについてどう感じましたか？',
+  '講座で使用した動画と教科書のわかりやすさはいかがでしたか？',
+  '実生活にすぐに役立ったことは何ですか？',
+  '他の講師やスクールと比較して良かった点は何ですか？',
+  '一番学びになった内容を教えてください。',
+  '受講中に一番大変だったこと・乗り越えたことは？',
+  '今後の目標や取り組みたいことは何ですか？',
+  '今後やってほしいこと・ご提案・改善点があれば教えてください',
+  'この講座をどんな人に受けてもらいたいですか？',
+];
+---
+<html lang="ja">
+  <SeoHead title={(item?.title ? item.title + '｜' : '') + '受講者の声（デジタル）｜WHOLE LIFE認定講座'} description="受講者の声（デジタルアンケート）をQ&A形式で掲載。プロフィールや実際の変化を紹介します。" />
+  <body>
+    <Header />
+    <main class="section py-12 max-w-6xl lg:py-16">
+      {item ? (
+        <>
+          <h1 class="text-4xl sm:text-5xl font-bold text-base-900">受講者の声</h1>
+
+          <article class="mt-10 bg-white rounded-2xl shadow-card ring-1 ring-black/5 overflow-hidden">
+
+            <div class="p-8 sm:p-10 space-y-10">
+              <div class="rounded-xl p-0 overflow-hidden ring-1 ring-black/10">
+                {(() => { const p = parseProfile(item); return (
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 text-[15px]">
+                    <div class="ring-1 ring-black/10 overflow-hidden">
+                      <div class="bg-black/5 px-4 py-3 text-base-900/70">性別</div>
+                      <div class="bg-white px-4 py-3">{p.gender}</div>
+                    </div>
+                    <div class="ring-1 ring-black/10 overflow-hidden">
+                      <div class="bg-black/5 px-4 py-3 text-base-900/70">年代</div>
+                      <div class="bg-white px-4 py-3">{p.age}</div>
+                    </div>
+                    <div class="ring-1 ring-black/10 overflow-hidden">
+                      <div class="bg-black/5 px-4 py-3 text-base-900/70">職業</div>
+                      <div class="bg-white px-4 py-3">{p.job}</div>
+                    </div>
+                    <div class="ring-1 ring-black/10 overflow-hidden">
+                      <div class="bg-black/5 px-4 py-3 text-base-900/70">受講コース</div>
+                      <div class="bg-white px-4 py-3">{p.course}</div>
+                    </div>
+                    <div class="ring-1 ring-black/10 overflow-hidden sm:col-span-2 lg:col-span-4">
+                      <div class="bg-black/5 px-4 py-3 text-base-900/70">改善テーマ</div>
+                      <div class="bg-white px-4 py-3">{p.theme}</div>
+                    </div>
+                  </div>
+                ); })()}
+              </div>
+
+              <div>
+                <h2 class="text-2xl font-semibold text-base-900">Q&A</h2>
+                <dl class="mt-6 space-y-6">
+                  {questions.map((q, i) => (
+                    <div class="rounded-lg ring-1 ring-black/10 p-6 sm:p-7 bg-white" data-qa-index={i + 1}>
+                      <dt class="text-lg sm:text-xl font-semibold text-primary tracking-[0.01em]">
+                        {`Q${i + 1}. ${q}`}
+                      </dt>
+                      <dd class="mt-3 text-[16px] text-base-900 leading-8">{(item.answers && item.answers[i]) || '準備中'}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div class="pt-2 flex flex-wrap justify-center gap-3">
+                <Button href="/contact" variant="cta">無料で相談する</Button>
+                <Button href="/reviews/digital" variant="secondary">一覧に戻る</Button>
+              </div>
+            </div>
+          </article>
+        </>
+      ) : (
+        <p>見つかりませんでした。</p>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

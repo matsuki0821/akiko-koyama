@@ -1,0 +1,72 @@
+---
+type Feature = {
+  id: number;
+  title: string;
+  lead: string;
+  body: string;
+};
+
+const features: Feature[] = [
+  {
+    id: 1,
+    title: '完全オンライン',
+    lead: 'ご自宅や外出先からでも受講可能。',
+    body: '時間や場所を選ばず学習できます。',
+  },
+  {
+    id: 2,
+    title: '初心者でも安心',
+    lead: '基礎から学べるので、',
+    body: '初めての方も着実に知識を身につけられます。',
+  },
+  {
+    id: 3,
+    title: '学んだその日から使えるスキルを習得',
+    lead: '知識を詰め込むだけではなく、',
+    body: '学んだその日から使えるスキルを習得。自分や周りの変化をすぐに感じられます。',
+  },
+  {
+    id: 4,
+    title: '一流講師',
+    lead: '教育業界トッププロが直接指導。',
+    body: '実践的なノウハウと経験を学べます。',
+  },
+];
+---
+
+<section class="section py-20">
+  <header class="text-center">
+    <h2 class="text-2xl font-semibold text-base-900 sm:text-3xl">講座の特徴</h2>
+    <p class="mt-3 text-base-900/70">はじめてでも安心。学びが行動に変わる設計です。</p>
+  </header>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-2">
+    {features.map((f) => (
+      <article class="group grid grid-cols-1 overflow-hidden rounded-2xl bg-white ring-1 ring-black/5 shadow-card transition hover:-translate-y-0.5">
+        <div class="p-6">
+          <div class="flex items-center gap-3">
+            <span class="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-primary font-semibold">{f.id}</span>
+            <h3 class="text-lg font-semibold text-base-900">{f.title}</h3>
+          </div>
+          <p class="mt-3 text-[15px] leading-7 text-base-900/80">{f.lead}<br />{f.body}</p>
+        </div>
+        <div class="relative aspect-[16/9] w-full overflow-hidden">
+          {f.id === 1 && (
+            <img src="/images/image1.jpeg" alt="完全オンライン" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+          )}
+          {f.id === 2 && (
+            <img src="/images/image2.jpg" alt="初心者でも安心" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+          )}
+          {f.id === 3 && (
+            <img src="/images/image3.JPG" alt="学んだその日から使えるスキルを習得" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+          )}
+          {f.id === 4 && (
+            <img src="/images/image4.jpg" alt="一流講師" class="absolute inset-0 h-full w-full object-cover object-[50%_30%]" loading="lazy" decoding="async" />
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+

@@ -1,0 +1,53 @@
+---
+const lines = [
+  '「人生に起きるあらゆる悩みを、',
+  '　共に乗り越えたい」',
+  'WHOLE LIFEについて、',
+  'そんな想いを名前に込めました。',
+  '私たちは、それが理想ではなく、',
+  '実現できる未来だと信じています。'
+];
+---
+
+<section class="relative overflow-hidden bg-gradient-to-b from-[#f7f6f4] to-white">
+  <div class="section h-svh min-h-[800px] flex items-center">
+    <div class="relative w-full">
+      <div class="pointer-events-none absolute inset-0 [mask-image:radial-gradient(60%_50%_at_50%_40%,black,transparent)]">
+        <div class="absolute -inset-x-10 -top-24 h-64 rounded-full bg-gold-100/60 blur-3xl" />
+      </div>
+
+      <!-- subtle diagonal light streaks -->
+      <div aria-hidden="true" class="linesWrap">
+        <div class="line" style="top:12%"></div>
+        <div class="line" style="top:46%"></div>
+        <div class="line" style="top:78%"></div>
+      </div>
+
+      <div class="relative z-[2] mx-auto max-w-4xl text-center">
+        <h2 class="mt-4 text-4xl sm:text-6xl font-serif tracking-tight text-base-900">想い</h2>
+        <div class="mt-10">
+          <figure class="mx-auto max-w-3xl rounded-2xl bg-white/70 ring-1 ring-black/5 shadow-card backdrop-blur">
+            <blockquote class="px-6 py-8 sm:px-10 sm:py-12">
+              {lines.map((t, i) => (
+                <p class="text-xl sm:text-2xl leading-relaxed text-base-900/90 opacity-0 translate-y-3 will-change-transform" style={`animation: fadeUp .7s ease-out forwards; animation-delay: ${0.12 * i}s`}>
+                  {t}
+                </p>
+              ))}
+            </blockquote>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style is:global>
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
+    @keyframes lineSlide { from { transform: translateX(-25%); } to { transform: translateX(25%); } }
+    .linesWrap { position: absolute; inset: -20%; transform: rotate(16deg); pointer-events: none; z-index: 1; }
+    .line { position: absolute; left: -55%; width: 210%; height: 170px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,210,140,0.95), rgba(255,255,255,0)); filter: blur(14px); opacity: .85; mix-blend-mode: overlay; animation: lineSlide 12s ease-in-out infinite alternate; }
+    .line:nth-child(2) { height: 150px; opacity: .78; animation-duration: 14s; }
+    .line:nth-child(3) { height: 190px; opacity: .72; animation-duration: 16s; }
+  </style>
+</section>
+
+

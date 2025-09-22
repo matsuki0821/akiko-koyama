@@ -1,0 +1,49 @@
+---
+import fs from 'fs';
+const page = {
+  title: 'WHOLE LIFE お客様の声｜手書きアンケート公開',
+  description:
+    'WHOLE LIFEの受講者アンケートを要約と原本画像で公開。安心感、具体的な行動変化、親の気づきなど実感の声を掲載。PDFもダウンロード可能。',
+  canonical: 'https://wholelife-japan.com/voice',
+};
+
+const outRoot = './public/voice';
+const entries = fs.existsSync(outRoot)
+  ? fs
+      .readdirSync(outRoot)
+      .filter((name) => !name.endsWith('-lite.pdf'))
+      .filter((name) => !/\.(pdf)$/i.test(name))
+      .sort()
+  : [];
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>{page.title}</title>
+    <meta name="description" content={page.description} />
+    <link rel="canonical" href={page.canonical} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={page.title} />
+    <meta property="og:description" content={page.description} />
+    <meta property="og:url" content={page.canonical} />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900">
+    <main class="section py-16">
+      <div class="mx-auto max-w-4xl text-center">
+        <h1 class="text-3xl font-bold sm:text-4xl">お客様の声（手書きアンケート公開）</h1>
+        <p class="mt-4 text-base-900/70">受講後アンケートの要約と、原本画像・PDFを公開しています。具体的な変化や学びの実感をご覧ください。</p>
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {entries.map((slug) => (
+          <a class="rounded-xl border border-black/10 bg-white p-4 shadow-card hover:-translate-y-0.5 transition" href={`/voice/${slug}/`}>
+            <div class="font-medium">{slug}</div>
+            <div class="mt-2 text-sm text-base-900/60">クリックして詳細を見る</div>
+          </a>
+        ))}
+      </div>
+    </main>
+  </body>
+  </html>
+
+

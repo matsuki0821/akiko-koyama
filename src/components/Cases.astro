@@ -1,0 +1,33 @@
+---
+type Case = {
+  title: string;
+  summary: string;
+  metrics?: string[]; // ["再登校率97%","相談→7日で変化"]
+  href?: string;
+};
+const items: Case[] = [
+  { title: "中2・不登校→再登校", summary: "家庭内コミュニケーションと朝の導線を再設計。", metrics: ["再登校率97%","2週間で改善"], href: "/cases/001" },
+  { title: "教員向け研修", summary: "CBT×戦略的コーチングを導入し学級の空気を刷新。", metrics: ["満足度4.9/5"] },
+];
+---
+
+<section id="cases" class="section py-20">
+  <h2 class="text-2xl font-semibold tracking-tight text-base-900 sm:text-3xl">支援実績</h2>
+  <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {items.map((c) => (
+      <a href={c.href ?? "#"} class="group block rounded-2xl border border-black/10 bg-white p-6 shadow-card transition hover:-translate-y-0.5">
+        <h3 class="text-lg font-semibold text-base-900">{c.title}</h3>
+        <p class="mt-2 text-sm leading-7 text-base-900/70">{c.summary}</p>
+        {c.metrics && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {c.metrics.map((m) => (
+              <span class="rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/10">{m}</span>
+            ))}
+          </div>
+        )}
+      </a>
+    ))}
+  </div>
+</section>
+
+
