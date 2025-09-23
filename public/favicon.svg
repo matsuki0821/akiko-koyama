@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="12" fill="#5C4631"/>
-  <path d="M20 42c0-8 6-12 12-12s12 4 12 12" stroke="#C9A35A" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <circle cx="32" cy="22" r="6" fill="#F7F6F4"/>
+<!-- Simple, small-size friendly favicon for WHOLE LIFE -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Background: brand brown with rounded square to stand out on light tabs -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#5C4631"/>
+  <!-- Monogram WL: bold and centered; use slight letter spacing and thick strokes -->
+  <g fill="#FFFFFF">
+    <path d="M16 44l4-24h4l4 16l4-16h4l4 24h-4l-2-14l-4 14h-4l-4-14l-2 14h-4z"/>
+    <rect x="40" y="20" width="4" height="24" rx="1"/>
+  </g>
 </svg>
-
 

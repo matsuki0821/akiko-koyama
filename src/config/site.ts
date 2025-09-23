@@ -6,7 +6,8 @@ export const site = {
   external: {
     schoolSupport: 'https://wholelife-japan.com/school-support.html',
     certCourse: 'https://wholelife-japan.com/',
-    instagram: 'https://www.instagram.com/'
+    instagram: 'https://www.instagram.com/',
+    threads: 'https://www.threads.net/'
   }
 };
 

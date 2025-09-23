@@ -9,6 +9,8 @@ import Mission from '@/components/sections/Mission.astro';
 import Features from '@/components/sections/Features.astro';
 import SimplePromptShowcaseSticky from '@/components/sections/SimplePromptShowcaseSticky.tsx';
 import TestimonialsMasonry from '@/components/TestimonialsMasonry.astro';
+import TestimonialsMarquee from '@/components/TestimonialsMarquee.tsx';
+import { getCollection } from 'astro:content';
 import CTA from '@/components/CTA.astro';
 import Faq from '@/components/Faq.astro';
 import Schedule from '@/components/sections/Schedule.astro';
@@ -35,11 +37,8 @@ import Curriculum from '@/components/sections/Curriculum.astro';
     <!-- 受講者の声セクションを強調表示（上位に配置済み） -->
     <section class="section py-16">
       <h2 class="text-2xl sm:text-3xl font-bold text-center text-base-900">受講者の声</h2>
-      <p class="mt-2 text-center text-base-900/70">実際の変化・体験談をピックアップしてご紹介します。</p>
-      <div class="mt-8">
-        <TestimonialsMasonry />
-      </div>
     </section>
+    <TestimonialsMarquee client:load items={(await getCollection('testimonials')).map((t) => ({ name: t.data.name, affiliation: t.data.affiliation, avatar: t.data.avatar, quote: t.data.quote }))} />
 
     <Schedule />
 

@@ -19,6 +19,10 @@
   .masonry { column-gap: 1.5rem; }
   @screen md { .masonry { column-count: 2; } }
   @screen lg { .masonry { column-count: 3; } }
+
+  /* スクロールバー非表示（横スクロール用） */
+  .scrollbar-hide { scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 }
 
 @layer utilities {
