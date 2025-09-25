@@ -24,8 +24,8 @@ function clamp(n: number, min = 0, max = 1) {
 }
 
 export default function SimplePromptShowcaseSticky({
-  title = "コミュニケーショントレーニングで、大きな成果。",
-  subtitle = "",
+  title = "学びたい人は認定講座。\n課題解決は登校サポート。",
+  subtitle = "誰かの役に立ちたい人も、自分の悩みを解決したい人も、ここから始められる。",
   promptText = "",
   cards = [
     { label: "登校サポート", caption: "家庭と学校の橋渡し", icon: "🏫", x: -600, y: 20, amp: -18, w: 520, h: 620, tone: "blue" },
@@ -36,7 +36,7 @@ export default function SimplePromptShowcaseSticky({
   const [progress, setProgress] = useState(0.5);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const MOTION_MULTIPLIER = 10; // 動きの強さ（振幅）を10倍に
-  const MOBILE_STACK_GAP = -100; // モバイル時の上下の間隔（px）
+  const MOBILE_STACK_GAP = -100; // モバイル時の上下の間隔（px）S
   const prefersReduced = useMemo(
     () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
     []
@@ -98,9 +98,11 @@ export default function SimplePromptShowcaseSticky({
       aria-label="Simple Prompt Showcase"
     >
       <div className="sticky top-0 z-0 flex h-[100svh] items-center justify-center">
-        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-white/90 sm:text-6xl leading-tight">
-            {title}
+        <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
+          <h2 className="text-4xl font-bold tracking-tight text-white/90 sm:text-5xl lg:text-6xl leading-[1.15] md:leading-[1.1]">
+            {title.split('\n').map((line, i) => (
+              <span key={i} className="block whitespace-nowrap">{line}</span>
+            ))}
           </h2>
           {subtitle && (
             <p className="mx-auto mt-3 max-w-2xl text-lg text-white/70">{subtitle}</p>

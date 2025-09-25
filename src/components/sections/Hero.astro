@@ -14,8 +14,7 @@ const HERO_TEXT_SHIFT_Y = -80;
     aria-hidden="true"
     src="/images/aki.jpg"
     alt=""
-    class="absolute inset-0 h-full w-full object-cover"
-    style={`object-position: ${HERO_OBJECT_POS_X}% ${HERO_OBJECT_POS_Y}%; transform: translateX(${HERO_SHIFT_X}%) scale(${HERO_SCALE});`}
+    class="absolute inset-0 h-full w-full object-cover hero-img"
     loading="lazy"
     decoding="async"
   />
@@ -27,9 +26,9 @@ const HERO_TEXT_SHIFT_Y = -80;
     <div class="relative z-10 flex flex-col items-center text-center gap-6" style={`transform: translateY(${HERO_TEXT_SHIFT_Y}px);`}>
       <!-- 認定プログラムバッジを非表示（削除） -->
 
-      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-brown-900">
-        <span class="block">コミュニケーションが</span>
-        <span class="block"><span class="text-gold-600">家族</span> を支える</span>
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-base-900">
+        <span class="block">病気じゃない。でも苦しい。</span>
+        <span class="block">だからここで <span class="text-primary">学ぶ</span>。</span>
       </h1>
 
 
@@ -43,4 +42,20 @@ const HERO_TEXT_SHIFT_Y = -80;
 
   
  </section>
+
+<style>
+  /* デスクトップの既定位置（以前の定数: X=55%, Y=80%, shiftX=-6%, scale=1.12） */
+  .hero-img {
+    object-position: 55% 80%;
+    transform: translateX(-6%) scale(1.12);
+  }
+  /* モバイルでは講師写真が左に寄りすぎるため右寄せに補正 */
+  @media (max-width: 640px) {
+    .hero-img {
+      /* まずは中央から少し右・やや上へ */
+      object-position: 40% 40%;
+      transform: translateX(0) translateY(-6%) scale(1.08);
+    }
+  }
+</style>
 

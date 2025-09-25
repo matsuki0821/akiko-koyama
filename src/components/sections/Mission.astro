@@ -9,8 +9,8 @@ const lines = [
 ];
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-b from-[#f7f6f4] to-white">
-  <div class="section h-svh min-h-[800px] flex items-center">
+<section class="hidden">
+  <div class="section">
     <div class="relative w-full">
       <div class="pointer-events-none absolute inset-0 [mask-image:radial-gradient(60%_50%_at_50%_40%,black,transparent)]">
         <div class="absolute -inset-x-10 -top-24 h-64 rounded-full bg-gold-100/60 blur-3xl" />
@@ -40,14 +40,7 @@ const lines = [
     </div>
   </div>
 
-  <style is:global>
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
-    @keyframes lineSlide { from { transform: translateX(-25%); } to { transform: translateX(25%); } }
-    .linesWrap { position: absolute; inset: -20%; transform: rotate(16deg); pointer-events: none; z-index: 1; }
-    .line { position: absolute; left: -55%; width: 210%; height: 170px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,210,140,0.95), rgba(255,255,255,0)); filter: blur(14px); opacity: .85; mix-blend-mode: overlay; animation: lineSlide 12s ease-in-out infinite alternate; }
-    .line:nth-child(2) { height: 150px; opacity: .78; animation-duration: 14s; }
-    .line:nth-child(3) { height: 190px; opacity: .72; animation-duration: 16s; }
-  </style>
+  <style is:global></style>
 </section>
 
 

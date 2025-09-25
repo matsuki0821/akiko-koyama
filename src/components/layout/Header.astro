@@ -10,16 +10,17 @@ const nav = [
 ---
 <header id="site-header" data-scrolled="false" class="sticky top-0 z-50 bg-white shadow-sm transition-colors duration-300">
   <div class="section flex h-14 items-center justify-between">
-    <a href="/" class="flex items-center gap-3 font-extrabold text-primary">
-      <img src="/slide1-v2.jpg" alt="WHOLE LIFE 認定講座 ロゴ" class="h-7 w-7 sm:h-8 sm:w-8 object-contain" loading="lazy" decoding="async" />
-      <span class="text-base sm:text-lg">{site.brand}</span>
+    <a href="/" class="flex items-center gap-3 font-extrabold text-base-900">
+      <img src="/slide1-v2.jpg" alt="WHOLE LIFE 認定講座 ロゴ" class="h-9 w-9 sm:h-10 sm:w-10 object-contain" loading="lazy" decoding="async" />
+      <span class="text-lg sm:text-xl">{site.brand}</span>
     </a>
-    <nav class="hidden gap-2 md:flex">
+    <nav class="hidden md:flex items-center">
       {nav.map((n) => (
-        <a class="text-sm text-base-900/90 hover:text-base-900 hover:underline underline-offset-4 rounded-md px-2 py-1 transition-colors hover:bg-black/5" href={n.href}>{n.label}</a>
+        <a class="relative ml-3 first:ml-0 text-sm font-semibold text-base-900 pl-4 pr-3 py-1 first:before:hidden before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:transform before:w-px before:h-1/2 before:bg-base-900/30"
+          href={n.href}>{n.label}</a>
       ))}
     </nav>
-    <a href="/contact" class="hidden md:inline-flex items-center gap-2 rounded-full bg-brown-700 px-5 py-2.5 text-white shadow-lg ring-1 ring-brown-700/20 hover:bg-brown-800 hover:shadow-xl transition-transform hover:-translate-y-0.5">お問い合わせ</a>
+    <a href="/contact" class="hidden md:inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-white shadow-lg ring-1 ring-primary/20 hover:bg-primary-600 hover:shadow-xl transition-transform hover:-translate-y-0.5">お問い合わせ</a>
 
     {/* Hamburger button (mobile only) */}
     <button id="menu-toggle" class="md:hidden inline-flex items-center justify-center rounded-full p-2.5 bg-white/95 text-base-900 shadow ring-1 ring-black/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary" aria-controls="mobile-menu" aria-expanded="false" aria-label="メニューを開く">
@@ -70,13 +71,13 @@ const nav = [
     <div class="relative flex-1 overflow-y-auto p-6 z-[1001]">
       <nav class="space-y-4">
         {nav.map((n) => (
-          <a href={n.href} class="block text-lg font-medium text-white hover:text-gold-600 transition-colors">{n.label}</a>
+          <a href={n.href} class="block text-lg font-medium text-white hover:text-primary transition-colors">{n.label}</a>
         ))}
       </nav>
 
       <div class="mt-8 space-y-3">
-        <a href="/contact" class="block text-center rounded-full bg-white px-5 py-2 font-medium text-base-900 hover:bg-gold-50 transition-colors">お問い合わせ</a>
-        <a href="/contact?from=materials" class="block text-center rounded-full bg-white px-5 py-2 font-medium text-base-900 hover:bg-gold-50 transition-colors">資料請求</a>
+        <a href="/contact" class="block text-center rounded-full bg-white px-5 py-2 font-medium text-base-900 hover:bg-primary/10 transition-colors">お問い合わせ</a>
+        <a href="/contact?from=materials" class="block text-center rounded-full bg-white px-5 py-2 font-medium text-base-900 hover:bg-primary/10 transition-colors">資料請求</a>
       </div>
     </div>
 
