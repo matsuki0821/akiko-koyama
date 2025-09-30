@@ -3,8 +3,8 @@ import SeoHead from '@/components/layout/SeoHead.astro';
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
 import voices from '@/data/voices.json';
-// 手書きアンケートは画像がある2件のみ掲載
-const handwrittenSlugs = ['wholelife-customer-voice-01', 'wholelife-customer-voice-02'];
+// 手書きアンケートは画像があるもののみ掲載
+const handwrittenSlugs = ['wholelife-customer-voice-01', 'wholelife-customer-voice-02', 'wholelife-customer-voice-03'];
 const handwrittenVoices = (voices as any[]).filter((v) => handwrittenSlugs.includes(v.slug));
 ---
 <html lang="ja">
