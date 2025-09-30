@@ -1,5 +1,4 @@
 ---
-import fs from 'fs';
 import voices from '@/data/voices.json';
 import SeoHead from '@/components/layout/SeoHead.astro';
 import Header from '@/components/layout/Header.astro';
@@ -14,7 +13,6 @@ export async function getStaticPaths() {
 export const prerender = true;
 
 const current = (voices as any[]).find((v) => v.slug === slug);
-const isDigital = new Set(['wholelife-customer-voice-01','wholelife-customer-voice-02']).has(slug);
 const isSecond = slug === 'wholelife-customer-voice-02';
 // 手書き詳細のQ&Aをボックス表示で扱えるように配列化
 type QA = { q: string; a: string };
@@ -79,10 +77,13 @@ const page = {
   canonical: `https://wholelife-japan.com/voice/${slug}`,
 };
 
-const imgDir = `./public/voice/${slug}`;
-const images = fs.existsSync(imgDir)
-  ? fs.readdirSync(imgDir).filter((f) => f.endsWith('.webp')).sort()
-  : [];
+const answers: string[] = Array.isArray((current as any)?.answers) ? ((current as any)?.answers as string[]) : [];
+// 統一マッピング: answers[0]=Q2, [1]=Q3, [2]=Q4, [3]=Q5, [4]=Q6
+const reasonText: string = answers[0] || (current as any)?.reason || '';
+const beforeText: string = answers[1] || '';
+const changeText: string = answers[2] || '';
+const recommendText: string = answers[3] || '';
+const messageText: string = answers[4] || (answers.length ? answers[answers.length - 1] : '');
 ---
 <html lang="ja">
   <SeoHead title={page.title} description={page.description} />
@@ -102,95 +103,230 @@ const images = fs.existsSync(imgDir)
       <a href="/voices" class="inline-flex items-center gap-2 text-sm text-base-900/70 hover:text-base-900 rounded-full border border-black/10 bg-white px-3 py-1 shadow-sm">← 一覧に戻る</a>
       <h1 class="mt-2 text-2xl font-semibold">{current?.title ?? slug}</h1>
 
-      {!isDigital && (
-        <div class="mt-4">
-          <a href={`/voice/${slug}-lite.pdf`} target="_blank" rel="noopener" class="btn-primary inline-flex">📄 お客様の声（軽量版PDF）</a>
-          <small class="ml-2 text-base-900/60">
-            <a href={`/voice/${slug}.pdf`} target="_blank" rel="noopener">高解像度</a>
-          </small>
-        </div>
-      )}
+      
 
-      {!isDigital && (
-        <section class="mt-8 grid gap-6">
-          {images.map((name, i) => (
-            <article class="rounded-2xl bg-white shadow-card ring-1 ring-black/5 overflow-hidden">
-              <div class="relative aspect-[16/7] sm:aspect-[16/6] w-full overflow-hidden">
-                <img src={`/voice/${slug}/${name}`} alt={`WHOLE LIFE 受講者アンケート ${slug} ${i + 1}ページ目`} class="absolute inset-0 h-full w-full object-cover bg-black/5" loading="lazy" decoding="async" />
-              </div>
-            </article>
-          ))}
-        </section>
-      )}
+      <!-- 文字起こし（画像がなくても本文が読める・形式統一） -->
+      {slug === 'wholelife-customer-voice-03' ? (
+        <section class="mt-8 space-y-6">
+          <header class="space-y-2">
+            <h2 class="text-xl sm:text-2xl font-bold">WHOLE LIFE お客様アンケート</h2>
+            <p>この度は、WHOLE LIFEの講座にご参加いただき、誠にありがとうございます。今後のサービス改善のため、ぜひ、お客様の率直なご意見をお聞かせください。</p>
+            <p>【ご記入にあたって】匿名でご回答いただけます。ご回答いただいた内容は、サービスの改善目的以外には一切使用いたしません。</p>
+          </header>
 
-      <!-- SEO向け要約とQ&A（画像がなくても本文が読める） -->
-      {isDigital ? (
-        <section class="mt-8">
-          <h2 class="sr-only">Q&A</h2>
-          <dl class="space-y-6">
-            {qaList.map((qa, i) => (
-              <div class="rounded-lg ring-1 ring-black/10 p-6 sm:p-7 bg-white" data-qa-index={i + 1}>
-                <dt class="text-lg sm:text-xl font-semibold text-primary tracking-[0.01em]">{`Q${i + 1}. ${qa.q}`}</dt>
-                <dd class="mt-3 text-[16px] text-base-900 leading-8 whitespace-pre-wrap">{qa.a}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      ) : (
-        <section class="mt-10 grid gap-6 sm:grid-cols-2">
-          <article class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
-            <h2 class="text-xl font-semibold">要約（ポイント）</h2>
-            <ul class="mt-3 list-disc space-y-2 pl-5 text-base-900/80">
-              <li>安心感と寄り添い：子どもの気持ちに合わせた声かけで不安が和らいだ</li>
-              <li>行動の一歩：課題の分解・即時強化など家庭で試せる具体策で“やってみる”に変化</li>
-              <li>親の気づき：完璧主義を手放し、小さな前進を評価できるようになった</li>
-              <li>メッセージ：ひとりで抱え込まず、まずは試してみてほしい——前向きな推奨多数</li>
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">1. 講座の満足度を教えてください。</h3>
+            <p class="mt-3">「5: とても満足」から「1: 不満」の5段階評価で、最も近い数字を1つお選びください。</p>
+            <div class="mt-4 overflow-x-auto">
+              <table class="w-full table-fixed text-sm">
+                <colgroup>
+                  <col />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                </colgroup>
+                <thead>
+                  <tr class="border-b border-black/10">
+                    <th class="text-left py-2 pr-4 font-medium">項目</th>
+                    <th class="py-2 px-2 text-center">5</th>
+                    <th class="py-2 px-2 text-center">4</th>
+                    <th class="py-2 px-2 text-center">3</th>
+                    <th class="py-2 px-2 text-center">2</th>
+                    <th class="py-2 px-2 text-center">1</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="py-3 pr-4 align-middle">講座全体の満足度</td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/60 flex items-center justify-center text-[12px] leading-none">✓</div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">2. 講座を受けようと思った理由、決め手についてお聞かせください。</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例: 友人の紹介、ウェブサイトを見て、悩みに合っていたから など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p>数年前に小山さんの講座を受けたことがあり、その時にも自分と他者の認知の歪みで、私は違うと、私達はコミュニケーションを取っているつもりでも方向を間違えてしまっているが故にすれ違ってしまうことが多いということを学びました。小山さんと出会って、自分の認知の歪みに気付き、少しずつ人生が楽になっていったり、自分を好きになっていくことができました。</p>
+              <p>ここから“無意識と決意を持って作り上げたい”と講座をぜひ受けたいと思い受講を決めました。</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">3．受講する前は、どのようなことで悩んでいましたか？</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例：子育ての方向性、自分自身のキャリア、家族との関係など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p>特に大きな悩みがあった訳ではないのですが、これまでの経験やそこから培われた自分の性格（だと思っていましたこの時は）に、何だかの生きづらさを感じたり、落ち込んだりすることがありました。
+家族のことは大好きだし、大事だと思っているのにどこか心が感じたり、苛立ったりすることから罪悪感を感じることも多かったです。</p>
+              <p>また、仕事（教育関係）の方でも、時期があり、逃げ出したくなってしまうことがある一方、やりきりたいという思いもあり苦しみながらも続けていました。</p>
+              <p>受講の決め手にもなりますが、状況を変えるためにはまず自分の受け取り方や他者への関わり方、認知トレーニングを学ぶことで少しでも改善するのではと思い、受講しました。</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">4. 講座を受ける前と後で、考え方や行動にどのような変化がありましたか？</h3>
+            <p class="mt-2 text-sm text-base-900/70">具体的なエピソードを交えて教えていただけますと幸いです。</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p>まず同じ状況が起きた時、講座内容がフラッシュバックするようになりました。それだけでひとつ冷静になることができて、今までの自分ではしなかったような落ち着いた対応、講座の内容を思い出しながらの関わりをすることができました。</p>
+              <p>例えば、仕事中の子どもの関わりの際、約束したことを順調に守ってくれていることにより追加の課題を出してしまうといったようなポジティブパニッシュメントに即行する、止めました。それにより、子も約束を守れた、守ってもらえたという満足感を感じることができて信頼関係も強くなり、衝動的な行動も減ってきたように思います。</p>
+              <p>全て解決したわけではありませんが、クラスの子たちの心の安定が増し関係性が好転したように感じますし、私自身も仕事で逃げ出したくなるような辛い気持ちになることが減りました。</p>
+              <p>また、自分自身の過去の辛かったことや、本当はどこにその悲しみの根源があったのかを掘り下げることで、数十年来と当時の自分の想いを理解し慰めてあげられた気がします。自己理解を深められたことは、とても大きな財産になりました。</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">5. 「独学とはここが違う！」と感じた、この講座のおすすめポイントを教えてください。</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例: 講師からのフィードバック、仲間との対話、体系的な知識 など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p>他の講座は聞きっぱなしになることが多い中で、WHOLE LIFEの講座は聞き、学びながらもアウトプットをし、学んだ知識やスキルを授業内でブラッシュアップしていくという、脳をフル活用しながら進んでいきます。</p>
+              <p>そして小数教材で同じクラスの、講師の小山さんと様々な場面のケーススタディをしたり、各々の考えを話すことで意見の交換ができます。</p>
+              <p>また、丁寧なフィードバックで自分の考えを確認したり擦り合わせたりできることも大きなポイントだと思います。</p>
+              <p>教育関係の講座や研修は多く受けてきましたが、内容が寄り添いも当たり前に学ぶ割に、なぜそこまで（他者）がその行動をするのか、どのように振り返ってその行動が変わるように関わっていくのか具体的な方法を学ぶことはありませんでした。</p>
+              <p>この講座では、行動の裏にはどんな認知歪みがあり、どのような目的でそれらが発動しているのか、どんな関わり方、ステップの踏み方をすると効果的なのかを、より具体的に学ぶことが出来る為、単なる知識でなくスキルとして身に付けることができると思います。</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="mt-1 text-lg sm:text-xl font-semibold text-primary">6. もし同じように悩んでいる方がいたら、どのようなメッセージを伝えますか？</h3>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p>何となく苦しい、 生きづらいな、 と感じつつも自分の性格だからと諦めている人がいるならば、ぜひ認知の歪みや自動思考、トリガーやコアビリーフについて知ってほしい。世界中の見方が変わることによって、自分や周りに優しくなれて、自分のことを少しずつ好きになることができます。私がそうでした。</p>
+              <p>小山さんと出会えて彼女の見立てを学び、共に軌跡を通し自分を変えることができた私はラッキーです。</p>
+              <p>1人で学んで身に付けるのは難しいけれど、誰かと一緒なら前進ができます。学びたい、変わりたい、でもどうしたら良いかわからないという方はぜひ一緒に学びましょう！</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">7. お声の掲載許可について</h3>
+            <p class="mt-2">今回いただいたご感想を、当社のウェブサイトや資料に匿名で掲載させていただいてもよろしいでしょうか？（お名前などの個人情報は一切公開いたしません）</p>
+            <ul class="mt-3 space-y-2">
+              <li class="flex items-center gap-2"><span class="inline-flex h-4 w-4 items-center justify-center border border-black/60 text-[10px] leading-none">✓</span><span>はい</span></li>
+              <li class="flex items-center gap-2"><span class="inline-block h-4 w-4 border border-black/30"></span><span>いいえ</span></li>
+              <li class="flex items-center gap-2"><span class="inline-block h-4 w-4 border border-black/30"></span><span>口内容を確認してから判断したい</span></li>
             </ul>
           </article>
-          <article class="rounded-2xl bg-white p-6 shadow-card ring-1 ring-black/5">
-            <h2 class="text-xl font-semibold">Qごとの要約</h2>
-            <div class="mt-3 space-y-3">
-              <div>
-                <h3 class="font-bold">Q1 受講動機</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>家庭の関わり方を学びたい</li>
-                  <li>子の行動を促す具体策を知りたい</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-bold">Q2 満足点</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>事例が豊富で実践に落ちる</li>
-                  <li>丁寧なフィードバックで安心</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-bold">Q3 役立ちポイント</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>行動を小さく分け成功体験を積む</li>
-                  <li>声かけテンプレートで迷いが減少</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-bold">Q4 変化・成果</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>家庭の雰囲気が落ち着いた</li>
-                  <li>登校や準備の自発性が上がった</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-bold">Q5 受講検討者へ</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>少しずつの前進で十分。実践すれば変化が出る</li>
-                </ul>
-              </div>
-              <div>
-                <h3 class="font-bold">Q6 同じ悩みの方へ</h3>
-                <ul class="mt-1 list-disc space-y-1 pl-5 text-base-900/80">
-                  <li>ひとりで抱え込まず、まずは試してみてほしい</li>
-                </ul>
-              </div>
+
+          <p>ご協力いただき、誠にありがとうございました。</p>
+        </section>
+      ) : (
+        <section class="mt-8 space-y-6">
+          <header class="space-y-2">
+            <h2 class="text-xl sm:text-2xl font-bold">WHOLE LIFE お客様アンケート</h2>
+            <p>この度は、WHOLE LIFEの講座にご参加いただき、誠にありがとうございます。今後のサービス改善のため、ぜひ、お客様の率直なご意見をお聞かせください。</p>
+            <p>【ご記入にあたって】匿名でご回答いただけます。ご回答いただいた内容は、サービスの改善目的以外には一切使用いたしません。</p>
+          </header>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">1. 講座の満足度を教えてください。</h3>
+            <p class="mt-3">「5: とても満足」から「1: 不満」の5段階評価で、最も近い数字を1つお選びください。</p>
+            <div class="mt-4 overflow-x-auto">
+              <table class="w-full table-fixed text-sm">
+                <colgroup>
+                  <col />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                  <col class="w-16" />
+                </colgroup>
+                <thead>
+                  <tr class="border-b border-black/10">
+                    <th class="text-left py-2 pr-4 font-medium">項目</th>
+                    <th class="py-2 px-2 text-center">5</th>
+                    <th class="py-2 px-2 text-center">4</th>
+                    <th class="py-2 px-2 text-center">3</th>
+                    <th class="py-2 px-2 text-center">2</th>
+                    <th class="py-2 px-2 text-center">1</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="py-3 pr-4 align-middle">講座全体の満足度</td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/60 flex items-center justify-center text-[12px] leading-none">✓</div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                    <td class="py-3 px-2">
+                      <div class="mx-auto h-5 w-5 border border-black/30"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">2. 講座を受けようと思った理由、決め手についてお聞かせください。</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例: 友人の紹介、ウェブサイトを見て、悩みに合っていたから など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p class="whitespace-pre-wrap">{reasonText}</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">3．受講する前は、どのようなことで悩んでいましたか？</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例：子育ての方向性、自分自身のキャリア、家族との関係など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p class="whitespace-pre-wrap">{beforeText}</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">4. 講座を受ける前と後で、考え方や行動にどのような変化がありましたか？</h3>
+            <p class="mt-2 text-sm text-base-900/70">具体的なエピソードを交えて教えていただけますと幸いです。</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p class="whitespace-pre-wrap">{changeText}</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">5. 「独学とはここが違う！」と感じた、この講座のおすすめポイントを教えてください。</h3>
+            <p class="mt-2 text-sm text-base-900/70">（例: 講師からのフィードバック、仲間との対話、体系的な知識 など）</p>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p class="whitespace-pre-wrap">{recommendText}</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="mt-1 text-lg sm:text-xl font-semibold text-primary">6. もし同じように悩んでいる方がいたら、どのようなメッセージを伝えますか？</h3>
+            <div class="mt-3 space-y-3 text-[16px] leading-8">
+              <p class="whitespace-pre-wrap">{messageText}</p>
+            </div>
+          </article>
+
+          <article class="rounded-lg ring-1 ring-black/10 bg-white p-6 sm:p-7">
+            <h3 class="text-lg sm:text-xl font-semibold text-primary">7. お声の掲載許可について</h3>
+            <p class="mt-2">今回いただいたご感想を、当社のウェブサイトや資料に匿名で掲載させていただいてもよろしいでしょうか？（お名前などの個人情報は一切公開いたしません）</p>
+            <ul class="mt-3 space-y-2">
+              <li class="flex items-center gap-2"><span class="inline-flex h-4 w-4 items-center justify-center border border-black/60 text-[10px] leading-none">✓</span><span>はい</span></li>
+              <li class="flex items-center gap-2"><span class="inline-block h-4 w-4 border border-black/30"></span><span>いいえ</span></li>
+              <li class="flex items-center gap-2"><span class="inline-block h-4 w-4 border border-black/30"></span><span>口内容を確認してから判断したい</span></li>
+            </ul>
           </article>
         </section>
       )}
