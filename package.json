@@ -7,6 +7,7 @@
     "prebuild": "npm run compress:pdf && npm run compress:img",
     "compress:pdf": "node scripts/compress-pdf.js",
     "compress:img": "node scripts/compress-images.mjs",
+    "trim:logo": "node scripts/trim-logo.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "format": "prettier --write ."
@@ -27,6 +28,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4"
   }
