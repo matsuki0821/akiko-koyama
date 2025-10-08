@@ -20,18 +20,38 @@ const faqs = [
     q: '他の講座と何が違うのですか？',
     a: '私たちの講座は、教科書の内容をなぞるだけではありません。少人数の対話形式で進めることで、実際の場面で使えるスキルをとことん実践的に学んでいただきます。受講後に、自分自身の変化を楽しみにしていてください。'
   },
+  {
+    q: '講座は全何時間で、どんなカリキュラムですか？',
+    a: 'WHOLE LIFEの認定講座は全16時間のプログラムです。前半は「不安型完璧主義への理解と介入方法」、中盤で「認知行動療法の基礎と目標設定」、後半では「認知の歪み・アサーティブコミュニケーション・リフレーミング」を体系的に学びます。初心者の方でも段階的に進められるカリキュラムです。'
+  },
+  {
+    q: 'どんな人に向いていますか？',
+    a: '家庭・職場・学校などでの対人関係に悩んでいる方、誰かの役に立ちたい方、自分の生きづらさを改善したい方におすすめです。専門的な資格や経験は不要です。'
+  },
+  {
+    q: '学習の形式はオンラインですか？',
+    a: 'はい。講座は完全オンラインで、自宅や外出先から受講できます。すべての講座は好きな時間に視聴可能で、少人数の対話形式を取り入れているため、実践的に学べる点が特徴です。'
+  },
+  {
+    q: '講座の日程はいつですか？',
+    a: '月ごとに複数のコースを開講しています。例：10月コース、7月コースなど。残席状況は「開講日程」欄で随時更新されます。満席の場合は「次回の開催について問い合わせる」よりご連絡ください。'
+  },
+  {
+    q: '無料相談や体験はありますか？',
+    a: 'はい。トップページから無料相談をお申し込みいただけます。講座の雰囲気や内容を確認してから安心してご参加いただけます。'
+  },
 ];
 ---
 
-<section id="faq" class="section py-20 max-w-3xl text-center">
-  <h2 class="text-2xl font-semibold text-base-900 sm:text-3xl">よくある質問</h2>
+<section id="faq" class="section py-20 max-w-6xl mx-auto text-center">
+  <h2 class="text-3xl font-semibold text-base-900 sm:text-4xl">よくある質問</h2>
   <div class="mt-8 divide-y divide-base-900/10 rounded-2xl bg-white ring-1 ring-black/5 shadow-card">
     {faqs.map((f) => (
       <details class="group open:bg-base-100">
-        <summary class="cursor-pointer list-none px-6 py-4 text-[15px] font-medium text-base-900">
+        <summary class="cursor-pointer list-none px-6 py-4 text-[17px] sm:text-[18px] font-medium text-base-900">
           {f.q}
         </summary>
-        <div class="px-6 pb-5 text-[15px] leading-7 text-base-900/70">{f.a}</div>
+        <div class="px-6 pb-5 text-[16px] sm:text-[17px] leading-8 text-base-900/70">{f.a}</div>
       </details>
     ))}
   </div>

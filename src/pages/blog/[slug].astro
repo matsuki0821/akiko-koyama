@@ -14,15 +14,14 @@ const { entry } = Astro.props as { entry: any };
 const { Content } = await entry.render();
 ---
 <html lang="ja">
-  <SeoHead title={`${entry.data.title} – Blog`} />
+  <SeoHead title={`準備中 – Blog`} />
   <body>
     <Header />
     <main class="section py-16">
-      <h1 class="text-3xl font-bold">{entry.data.title}</h1>
-      {entry.data.cover && <img src={entry.data.cover} alt="" loading="lazy" decoding="async" class="mt-6 aspect-video w-full rounded-xl object-cover" />}
-      <article class="prose prose-neutral mt-8 max-w-none">
-        <Content />
-      </article>
+      <h1 class="text-3xl font-bold">Blog</h1>
+      <div class="mt-8 rounded-xl bg-white ring-1 ring-black/5 shadow-card p-8 text-center">
+        <p class="text-base text-base-900/70">準備中です。公開まで今しばらくお待ちください。</p>
+      </div>
     </main>
     <Footer />
   </body>

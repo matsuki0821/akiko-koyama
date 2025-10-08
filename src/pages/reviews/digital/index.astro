@@ -35,7 +35,7 @@ const toAgeGender = (title: string): string => (title || '').split('・')[0] || 
               href={`/reviews/digital/${v.slug}`}
               ageGender={toAgeGender(v.title)}
               catchphrase={catchphrase}
-              highlight={v.slug === 'wholelife-customer-voice-02' ? '過去の経験が今も影響' : (v.slug === 'wholelife-customer-voice-03' ? '8割' : (v.slug === 'wholelife-customer-voice-04' ? '自分が変わる' : (v.slug === 'wholelife-customer-voice-05' ? '気持ちを素直に伝えられる' : undefined)))}
+              highlight={v.slug === 'wholelife-customer-voice-02' ? '過去の経験が今も影響' : (v.slug === 'wholelife-customer-voice-03' ? '8割' : (v.slug === 'wholelife-customer-voice-04' ? '自分が変わる' : (v.slug === 'wholelife-customer-voice-05' ? '気持ちを素直に伝えられる' : (v.slug === 'wholelife-customer-voice-08' ? '客観的に見られる時間' : undefined))))}
               highlights={v.slug === 'wholelife-customer-voice-06' ? ['相手を決めつけず', '驚き'] : (v.slug === 'wholelife-customer-voice-07' ? ['性格', '学び'] : (idx === 0 ? ['怒鳴ってしまう', '素直に謝れる'] : undefined))}
               textSizeClass={v.slug === 'wholelife-customer-voice-02' ? 'text-[22px]' : undefined}
               avatarSrc="/slide1-v2.jpg"

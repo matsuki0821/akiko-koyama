@@ -1,0 +1,44 @@
+---
+import SeoHead from '@/components/layout/SeoHead.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+---
+<html lang="ja">
+  <SeoHead title="料金｜WHOLE LIFE 認定講座" description="受講料は298,000円（受講料・資料・動画・テスト・修了証の発行手数料を含む）です。" />
+  <body>
+    <Header />
+    <main class="section py-16">
+      <h1 class="text-4xl font-bold text-center text-base-900">料金</h1>
+
+      <section class="mt-10 grid place-items-center">
+        <article class="w-full max-w-md rounded-2xl bg-white ring-1 ring-black/5 shadow-card overflow-hidden">
+          <header class="px-8 py-6 bg-base-100/60 border-b border-black/5">
+            <h2 class="text-2xl font-semibold text-base-900">WHOLE LIFE 認定講座</h2>
+          </header>
+          <div class="p-8">
+            <div class="flex items-end gap-2">
+              <div class="text-5xl font-extrabold tracking-tight text-base-900">248,000<span class="text-2xl font-bold">円</span></div>
+              <div class="text-base-900/70 mb-2">税込</div>
+            </div>
+
+            <p class="mt-4 text-base text-base-900/80">料金には以下が全て含まれます。</p>
+            <ul class="mt-4 space-y-3 text-base text-base-900">
+              <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary"></span> 受講料</li>
+              <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary"></span> 資料</li>
+              <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary"></span> 動画</li>
+              <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary"></span> テスト</li>
+              <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary"></span> 修了証の発行手数料</li>
+            </ul>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+              <a href="/contact" class="btn-cta">無料で相談する</a>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+

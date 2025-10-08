@@ -88,13 +88,13 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
           {doubled.map((t, i) => (
             <article
               key={i + t.name}
-              className="shrink-0 w-[320px] md:w-[360px] rounded-2xl border border-black/10 bg-white p-6 shadow-card flex flex-col min-h-[220px] md:min-h-[240px]"
+              className="shrink-0 w-[320px] md:w-[360px] rounded-2xl border border-black/20 bg-white p-6 shadow-card flex flex-col min-h-[220px] md:min-h-[240px]"
             >
-              <blockquote className="text-[15px] leading-7 text-base-900/90">“{t.quote}”</blockquote>
+              <blockquote className="text-[15px] leading-7 text-base-900">“{t.quote}”</blockquote>
               <footer className="mt-auto pt-5 flex items-center gap-3">
                 <div className="min-w-0">
                   <div className="truncate font-medium text-base-900">{t.name}</div>
-                  {t.affiliation && <div className="truncate text-sm text-base-900/60">{t.affiliation}</div>}
+                  {t.affiliation && <div className="truncate text-sm text-base-900/80">{t.affiliation}</div>}
                 </div>
               </footer>
             </article>
