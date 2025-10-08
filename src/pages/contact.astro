@@ -2,7 +2,8 @@
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
 import SeoHead from '@/components/layout/SeoHead.astro';
-const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+// 環境変数が未設定でも動作するように公開キーをフォールバック
+const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Leh4BYrAAAAAN13AW3tp2lX0VeDr_flry4HG2-h';
 ---
 <html lang="ja">
   <SeoHead title="お問い合わせ – WHOLE LIFE" />
