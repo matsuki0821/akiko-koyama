@@ -79,11 +79,14 @@ const page = {
 
 const answers: string[] = Array.isArray((current as any)?.answers) ? ((current as any)?.answers as string[]) : [];
 // 統一マッピング: answers[0]=Q2, [1]=Q3, [2]=Q4, [3]=Q5, [4]=Q6
-const reasonText: string = answers[0] || (current as any)?.reason || '';
-const beforeText: string = answers[1] || '';
-const changeText: string = answers[2] || '';
-const recommendText: string = answers[3] || '';
-const messageText: string = answers[4] || (answers.length ? answers[answers.length - 1] : '');
+// 個別差し替え（手書き版のみ適用）
+const overrides = (await import('@/data/voice_overrides.json')).default as Record<string, Partial<Record<'q2'|'q3'|'q4'|'q5'|'q6', string>>>;
+const o = overrides[slug || ''] || {};
+const reasonText: string = o.q2 || answers[0] || (current as any)?.reason || '';
+const beforeText: string = o.q3 || answers[1] || '';
+const changeText: string = o.q4 || answers[2] || '';
+const recommendText: string = o.q5 || answers[3] || '';
+const messageText: string = o.q6 || answers[4] || (answers.length ? answers[answers.length - 1] : '');
 ---
 <html lang="ja">
   <SeoHead title={page.title} description={page.description} />
