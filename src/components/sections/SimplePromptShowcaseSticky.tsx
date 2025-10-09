@@ -99,13 +99,25 @@ export default function SimplePromptShowcaseSticky({
     >
       <div className="sticky top-0 z-0 flex h-[100svh] items-center justify-center">
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-white/90 sm:text-5xl lg:text-6xl leading-[1.15] md:leading-[1.1]">
-            {title.split('\n').map((line, i) => (
-              <span key={i} className="block whitespace-nowrap">{line}</span>
-            ))}
+          <h2 className="text-3xl font-bold tracking-tight text-white/90 sm:text-5xl lg:text-6xl leading-tight sm:leading-[1.15] md:leading-[1.1]">
+            {title.split('\n').map((line, i) => {
+              const target = "課題解決は登校サポート。";
+              if (line === target) {
+                return (
+                  <span key={i} className="block">
+                    <span className="block sm:hidden">課題解決は</span>
+                    <span className="block sm:hidden">登校サポート。</span>
+                    <span className="hidden sm:inline whitespace-nowrap">{line}</span>
+                  </span>
+                );
+              }
+              return (
+                <span key={i} className="block whitespace-normal sm:whitespace-nowrap">{line}</span>
+              );
+            })}
           </h2>
           {subtitle && (
-            <p className="mx-auto mt-3 max-w-2xl text-lg text-white/70">{subtitle}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-base sm:text-lg text-white/70 leading-relaxed">{subtitle}</p>
           )}
 
           {/* 入力UI（検索窓風）は非表示にしました */}
