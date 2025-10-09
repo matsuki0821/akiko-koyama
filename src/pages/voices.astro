@@ -117,8 +117,8 @@ const handwrittenVoices = (voices as any[]).filter((v) => handwrittenSlugs.inclu
     <div id="voice-lightbox" class="fixed inset-0 z-[70] hidden bg-black/80 p-4">
       <div class="relative mx-auto grid h-full max-w-6xl place-items-center">
         <button id="lb-close" aria-label="閉じる" class="absolute right-0 top-0 m-4 rounded-full bg-white/90 px-3 py-1 text-sm text-base-900 shadow">× 閉じる</button>
-        <button id="lb-prev" aria-label="前へ" class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-lg shadow">‹</button>
-        <button id="lb-next" aria-label="次へ" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-lg shadow">›</button>
+        <button id="lb-prev" aria-label="前へ" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/90 px-3 py-1 text-lg shadow">‹</button>
+        <button id="lb-next" aria-label="次へ" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/90 px-3 py-1 text-lg shadow">›</button>
         <div id="lb-stage" class="relative max-h-[90vh] w-full max-w-5xl overflow-hidden cursor-zoom-in">
           <img id="lb-img" alt="voice image" class="mx-auto select-none" style="max-height:90vh; transform-origin:center center;" />
         </div>
@@ -177,8 +177,21 @@ const handwrittenVoices = (voices as any[]).filter((v) => handwrittenSlugs.inclu
         stage?.addEventListener('mousedown', (e) => onDown(e.clientX, e.clientY));
         window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
         window.addEventListener('mouseup', onUp);
-        stage?.addEventListener('touchstart', (e) => { const t=e.touches[0]; onDown(t.clientX, t.clientY); }, { passive: true });
+        let swipeSX = 0, swipeSY = 0, swipeT = 0;
+        stage?.addEventListener('touchstart', (e) => { const t=e.touches[0]; onDown(t.clientX, t.clientY); swipeSX = t.clientX; swipeSY = t.clientY; swipeT = Date.now(); }, { passive: true });
         window.addEventListener('touchmove', (e) => { const t=e.touches[0]; onMove(t.clientX, t.clientY); }, { passive: true });
+        stage?.addEventListener('touchend', (e) => {
+          const t = e.changedTouches && e.changedTouches[0];
+          if (!t) return;
+          const dx = t.clientX - swipeSX;
+          const dy = t.clientY - swipeSY;
+          const dt = Date.now() - swipeT;
+          // スワイプ判定（横方向・短時間・未ズーム時）
+          if (Math.abs(dx) > 50 && Math.abs(dy) < 40 && dt < 800 && scale === 1) {
+            if (dx < 0) next?.click(); else prev?.click();
+          }
+          onUp();
+        });
         window.addEventListener('touchend', onUp);
 
         // カード側からのオープンイベント
