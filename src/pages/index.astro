@@ -16,9 +16,11 @@ import Schedule from '@/components/sections/Schedule.astro';
 import Curriculum from '@/components/sections/Curriculum.astro';
 
 // no data fetch needed here; masonry component reads testimonials itself
+const title = "認知行動療法×行動療法の認定講座トップ｜WHOLE LIFE";
+const description = "認定講座で行動療法×認知行動療法を体系的に学び、自分や家族の不安型完璧主義を乗り越える支援力を身につけませんか。無料相談受付中。";
 ---
 <html lang="ja">
-  <SeoHead title="WHOLE LIFE – ポートフォリオ" description="“行ける朝”は設計です。行動分析×CBTで再現性ある支援を。" />
+  <SeoHead title={title} description={description} />
   <body>
     <Header />
     <div class="relative isolate">

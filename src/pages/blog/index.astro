@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort((a,b)=> +new Date(b.data.date) - +new Date(a.data.date));
 ---
 <html lang="ja">
-  <SeoHead title="Blog – WHOLE LIFE" />
+  <SeoHead title="ブログ｜不安型完璧主義と登校支援の知恵袋 – WHOLE LIFE" description="認知行動療法のヒント、漠然とした不安、苦しさや不安型完璧主義との向き合い方など、専門家が執筆するコラムを定期更新。学びと気づきが得られるブログです。" />
   <body>
     <Header />
     <main class="section py-16">
