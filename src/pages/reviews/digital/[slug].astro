@@ -25,6 +25,8 @@ const parseProfile = (v: any): Profile => {
   const theme = v.reason || '—';
   return { gender, age, job, hours, course, theme };
 };
+const toAgeGender = (title: string): string => (title || '').split('・')[0] || title || '';
+const displayName: string = (item && toAgeGender(item.title)) || '受講者';
 const questions: string[] = [
   '講座を受ける前、どんな悩みや不安がありましたか？',
   '講座を受けた後、考え方や行動、家族への関わり方は変わりましたか？',
@@ -40,7 +42,7 @@ const questions: string[] = [
 ];
 ---
 <html lang="ja">
-  <SeoHead title={(item?.title ? item.title + '｜' : '') + '受講者の声（デジタル）｜WHOLE LIFE認定講座'} description="受講者の声（デジタルアンケート）をQ&A形式で掲載。プロフィールや実際の変化を紹介します。" />
+  <SeoHead title={`受講者の声：${displayName}さんの変化｜WHOLE LIFE認定講座 体験記録`} description={`${displayName}さんの体験談を公開。行動療法・認知行動療法を通じて、不安や完璧主義をどのように克服し、家族関係や日常が変わったのかを紹介します。`} />
   <body>
     <Header />
     <main class="section py-12 max-w-6xl lg:py-16">
