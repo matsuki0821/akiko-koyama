@@ -52,18 +52,26 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
     const track = trackRef.current;
     if (!track) return;
-    dragging.current = true;
+    // まだドラッグ扱いにしない（スワイプ判定は移動量で行う）
+    dragging.current = false;
     startX.current = e.clientX;
     startLeft.current = track.scrollLeft;
-    setPaused(true);
-    // iOSではtargetよりcurrentTargetでのcaptureが安定
-    try { (e.currentTarget as Element).setPointerCapture?.(e.pointerId); } catch {}
+    // しきい値を超えたらpausedを有効化する
   };
 
   const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (e) => {
     const track = trackRef.current;
-    if (!track || !dragging.current) return;
+    if (!track) return;
     const dx = e.clientX - startX.current;
+    // 横移動がしきい値を超えたらドラッグ開始
+    if (!dragging.current) {
+      if (Math.abs(dx) > 8) {
+        dragging.current = true;
+        setPaused(true);
+      } else {
+        return; // しきい値未満は縦スクロールに委ねる
+      }
+    }
     const next = startLeft.current - dx;
     const maxScroll = track.scrollWidth / 2;
     let val = next;
