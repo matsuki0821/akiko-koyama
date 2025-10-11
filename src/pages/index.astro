@@ -39,7 +39,7 @@ const description = "認定講座で行動療法×認知行動療法を体系的
     <section class="section py-16">
       <h2 class="text-2xl sm:text-3xl font-bold text-center text-base-900">受講者の声</h2>
     </section>
-    <TestimonialsMarquee client:load items={(await getCollection('testimonials')).map((t) => ({ name: t.data.name, affiliation: t.data.affiliation, avatar: t.data.avatar, quote: t.data.quote }))} />
+    <TestimonialsMarquee client:load speed={120} items={(await getCollection('testimonials')).map((t) => ({ name: t.data.name, affiliation: t.data.affiliation, avatar: t.data.avatar, quote: t.data.quote }))} />
 
     <Schedule />
 
