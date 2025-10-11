@@ -24,11 +24,11 @@ function clamp(n: number, min = 0, max = 1) {
 }
 
 export default function SimplePromptShowcaseSticky({
-  title = "学びたい人は認定講座。\n課題解決は登校サポート。",
+  title = "学びたい人は認定講座。\n課題解決はカウンセリング。",
   subtitle = "誰かの役に立ちたい人も、自分の悩みを解決したい人も、ここから始められる。",
   promptText = "",
   cards = [
-    { label: "登校サポート", caption: "家庭と学校の橋渡し", icon: "🏫", x: -600, y: 20, amp: -18, w: 520, h: 620, tone: "blue" },
+    { label: "個別カウンセリング", caption: "今現在悩んでいる人も", icon: "🏫", x: -600, y: 20, amp: -18, w: 520, h: 620, tone: "blue" },
     { label: "認定講座", caption: "CBT×コーチングの16回講座", icon: "🎓", x: 600, y: -20, amp: 18, w: 520, h: 620, tone: "sand" },
   ],
 }: Props) {
