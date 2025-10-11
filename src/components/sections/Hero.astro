@@ -26,7 +26,15 @@ const HERO_TEXT_SHIFT_Y = -80;
     <div class="relative z-10 flex flex-col items-center text-center gap-6" style={`transform: translateY(${HERO_TEXT_SHIFT_Y}px);`}>
       <!-- 認定プログラムバッジを非表示（削除） -->
 
-      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-base-900">
+      <!-- モバイル版: 3行表示 -->
+      <h1 class="sm:hidden text-4xl font-extrabold leading-tight tracking-tight text-base-900">
+        <span class="block">病気じゃない。</span>
+        <span class="block">でも苦しい。</span>
+        <span class="block">だからここで <span class="text-primary">学ぶ</span>。</span>
+      </h1>
+
+      <!-- デスクトップ版: 既存の2行表示を維持 -->
+      <h1 class="hidden sm:block text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-base-900">
         <span class="block">病気じゃない。でも苦しい。</span>
         <span class="block">だからここで <span class="text-primary">学ぶ</span>。</span>
       </h1>

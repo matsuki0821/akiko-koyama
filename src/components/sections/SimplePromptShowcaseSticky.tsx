@@ -90,7 +90,7 @@ export default function SimplePromptShowcaseSticky({
   return (
     <section
       ref={hostRef}
-      className="relative min-h-[200vh] overflow-clip text-white"
+      className="relative overflow-clip text-white min-h-[180vh] sm:min-h-[200vh] -mt-8 sm:mt-0"
       style={{
         background:
           "radial-gradient(900px 500px at 10% -10%, rgba(255,255,255,0.07), transparent 60%), radial-gradient(900px 500px at 110% 110%, rgba(255,255,255,0.05), transparent 60%), #111",
@@ -101,12 +101,12 @@ export default function SimplePromptShowcaseSticky({
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white/90 sm:text-5xl lg:text-6xl leading-tight sm:leading-[1.15] md:leading-[1.1]">
             {title.split('\n').map((line, i) => {
-              const target = "課題解決は登校サポート。";
+              const target = "課題解決はカウンセリング。";
               if (line === target) {
                 return (
                   <span key={i} className="block">
                     <span className="block sm:hidden">課題解決は</span>
-                    <span className="block sm:hidden">登校サポート。</span>
+                    <span className="block sm:hidden">カウンセリング。</span>
                     <span className="hidden sm:inline whitespace-nowrap">{line}</span>
                   </span>
                 );

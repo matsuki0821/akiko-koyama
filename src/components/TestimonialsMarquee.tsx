@@ -56,7 +56,8 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     startX.current = e.clientX;
     startLeft.current = track.scrollLeft;
     setPaused(true);
-    try { (e.target as Element).setPointerCapture?.(e.pointerId); } catch {}
+    // iOSではtargetよりcurrentTargetでのcaptureが安定
+    try { (e.currentTarget as Element).setPointerCapture?.(e.pointerId); } catch {}
   };
 
   const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (e) => {
@@ -76,6 +77,11 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     dragging.current = false;
     setPaused(false);
   };
+  const onPointerCancel: React.PointerEventHandler<HTMLDivElement> = () => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    setPaused(false);
+  };
 
   // アイテムを2回並べて無限スクロール
   const doubled = [...items, ...items];
@@ -85,10 +91,12 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
       <div
         ref={trackRef}
         className="relative w-full overflow-x-auto scrollbar-hide px-4 md:px-6 select-none cursor-grab active:cursor-grabbing"
+        style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch', overscrollBehaviorX: 'contain' as any }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerLeave={endDrag}
+        onPointerCancel={onPointerCancel}
       >
         <div className="flex gap-4 min-w-max">
           {doubled.map((t, i) => (
