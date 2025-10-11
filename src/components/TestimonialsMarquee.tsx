@@ -26,15 +26,21 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
 
     let raf = 0;
     let last = performance.now();
+    // iOS SafariでscrollLeftの小数が丸められて進まないのを避けるため、
+    // 仮想位置posで小数を累積し、DOM反映時のみ整数化される影響を受けるようにする。
+    let pos = track.scrollLeft;
     const step = (now: number) => {
       const dt = (now - last) / 1000;
       last = now;
       if (!paused) {
-        track.scrollLeft += speed * dt;
         const maxScroll = track.scrollWidth / 2; // クローン分を考慮
-        if (track.scrollLeft >= maxScroll) {
-          track.scrollLeft -= maxScroll;
-        }
+        pos += speed * dt;
+        if (pos >= maxScroll) pos -= maxScroll;
+        if (pos < 0) pos += maxScroll;
+        track.scrollLeft = pos;
+      } else {
+        // ユーザー操作直後など、停止中はDOM側に合わせて同期
+        pos = track.scrollLeft;
       }
       raf = requestAnimationFrame(step);
     };
