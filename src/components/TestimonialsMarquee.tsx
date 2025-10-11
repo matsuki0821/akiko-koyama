@@ -52,6 +52,8 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
     const track = trackRef.current;
     if (!track) return;
+    // PCでは左ボタン以外は無視（ホバー移動でドラッグにならないように）
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     // まだドラッグ扱いにしない（スワイプ判定は移動量で行う）
     dragging.current = false;
     startX.current = e.clientX;
@@ -63,6 +65,9 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     const track = trackRef.current;
     if (!track) return;
     const dx = e.clientX - startX.current;
+    // マウス移動のみ（ボタン未押下）は無視。タッチ/左ボタン押下時だけ判定
+    const isActive = (e.pointerType === 'mouse' ? (e.buttons & 1) === 1 : true);
+    if (!isActive && !dragging.current) return;
     // 横移動がしきい値を超えたらドラッグ開始（しきい値: 12px）
     if (!dragging.current) {
       if (Math.abs(dx) > 12) {
