@@ -63,9 +63,9 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     const track = trackRef.current;
     if (!track) return;
     const dx = e.clientX - startX.current;
-    // 横移動がしきい値を超えたらドラッグ開始
+    // 横移動がしきい値を超えたらドラッグ開始（しきい値: 12px）
     if (!dragging.current) {
-      if (Math.abs(dx) > 8) {
+      if (Math.abs(dx) > 12) {
         dragging.current = true;
         setPaused(true);
       } else {
