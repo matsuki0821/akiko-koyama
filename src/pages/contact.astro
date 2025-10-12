@@ -2,8 +2,8 @@
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
 import SeoHead from '@/components/layout/SeoHead.astro';
-// reCAPTCHA v3 のSite Key（環境変数未設定時のフォールバックを指定）
-const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNaeSd4tb0ieXeGEJTbVUJok00';
+// reCAPTCHA v2 チェックボックスのSite Key（環境変数未設定時のフォールバック）
+const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6LfFPOcrAAAAANihKvKTNPc1DMd2lXM5MfqcxIMa';
 ---
 <html lang="ja">
   <SeoHead title="お問い合わせ｜無料相談はこちら – WHOLE LIFE認定講座" description="講座内容や無料相談に関するご質問はこちらから。メールでお気軽にお問い合わせいただけます。返信は迅速に対応いたします。" />
@@ -52,10 +52,10 @@ const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNae
         </div>
 
         {siteKey ? (
-          <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />
+          <div class="g-recaptcha" data-sitekey={siteKey}></div>
         ) : (
           <div class="rounded-xl border border-amber-300 bg-amber-50 text-amber-900 px-3 py-2 text-sm">
-            スパム防止（reCAPTCHA v3）を有効化するには、環境変数 <code>PUBLIC_RECAPTCHA_SITE_KEY</code> を設定してください。
+            スパム防止（reCAPTCHA v2）を有効化するには、環境変数 <code>PUBLIC_RECAPTCHA_SITE_KEY</code> を設定してください。
           </div>
         )}
 
@@ -81,12 +81,11 @@ const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNae
     </main>
     <Footer />
     {siteKey && (
-      <script src={'https://www.google.com/recaptcha/api.js?render=' + siteKey} async defer></script>
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     )}
     <script>
       const form = document.getElementById('contact-form');
       const statusEl = document.getElementById('form-status');
-      const recaptchaSiteKey = "{siteKey}";
       if (form && statusEl) {
         // 送信先のオリジンを判定
         let formActionOrigin = null;
@@ -95,41 +94,32 @@ const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNae
         } catch {}
         const isSameOrigin = formActionOrigin === location.origin;
 
-        // トークンをhiddenに設定
-        const setRecaptchaToken = (token) => {
-          let hidden = document.getElementById('g-recaptcha-response');
-          if (!hidden) {
-            hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = 'g-recaptcha-response';
-            hidden.id = 'g-recaptcha-response';
-            form.appendChild(hidden);
-          }
-          hidden.value = token || '';
+        // reCAPTCHA v2 完了チェック
+        const isRecaptchaSolved = () => {
+          try {
+            if (window.grecaptcha && typeof window.grecaptcha.getResponse === 'function') {
+              return !!window.grecaptcha.getResponse();
+            }
+          } catch {}
+          const tokenEl = form.querySelector('textarea[name="g-recaptcha-response"]');
+          return tokenEl && tokenEl.value && tokenEl.value.trim().length > 0;
         };
 
         form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          // reCAPTCHA v3のトークン取得
-          if (!window.grecaptcha || !recaptchaSiteKey) {
-            statusEl.textContent = 'reCAPTCHAの初期化に失敗しました。時間をおいて再度お試しください。';
-            return;
-          }
-
-          statusEl.textContent = '検証中です…';
-          let token = '';
-          try {
-            await window.grecaptcha.ready(async () => {});
-            token = await window.grecaptcha.execute(recaptchaSiteKey, { action: 'submit' });
-            setRecaptchaToken(token);
-          } catch (err) {
-            statusEl.textContent = 'reCAPTCHAの検証に失敗しました。もう一度お試しください。';
+          // 未完了なら送信を止める
+          if (!isRecaptchaSolved()) {
+            e.preventDefault();
+            statusEl.textContent = 'reCAPTCHAの確認が未完了です。チェックを完了してください。';
+            const widget = form.querySelector('.g-recaptcha');
+            if (widget && typeof widget.scrollIntoView === 'function') {
+              try { widget.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch {}
+            }
             return;
           }
 
           if (isSameOrigin) {
             // 同一オリジンのときのみAJAX送信
+            e.preventDefault();
             statusEl.textContent = '送信中です…';
             const submitBtn = form.querySelector('button[type="submit"], button');
             if (submitBtn) submitBtn.disabled = true;
@@ -143,6 +133,9 @@ const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNae
               if (res.ok) {
                 statusEl.textContent = '送信が完了しました。担当者より折り返しご連絡いたします。';
                 form.reset();
+                if (window.grecaptcha) {
+                  try { window.grecaptcha.reset(); } catch {}
+                }
               } else {
                 statusEl.textContent = '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。';
               }
@@ -152,10 +145,8 @@ const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '6Lc4NucrAAAAAOBNae
               const submitBtn = form.querySelector('button[type="submit"], button');
               if (submitBtn) submitBtn.disabled = false;
             }
-          } else {
-            // 外部オリジンは通常送信
-            form.submit();
           }
+          // 外部オリジンの場合は通常送信
         });
       }
     </script>
