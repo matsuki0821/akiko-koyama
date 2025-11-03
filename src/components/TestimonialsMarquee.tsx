@@ -15,14 +15,25 @@ type Props = {
 export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const dragging = useRef(false);
   const startX = useRef(0);
   const startLeft = useRef(0);
 
-  // オートスクロール（左右無限）
+  // モバイル判定（768px以下をモバイルとみなす）
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // オートスクロール（左右無限）- モバイルでは無効化
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || isMobile) return; // モバイルでは自動スクロールを無効化
 
     let raf = 0;
     let last = performance.now();
@@ -46,7 +57,90 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [paused, speed]);
+  }, [paused, speed, isMobile]);
+
+  // モバイルでの手動無限スクロール（スクロール位置を監視して端でジャンプ）
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !isMobile) return;
+
+    let rafId: number | null = null;
+    let isAdjusting = false; // ジャンプ中フラグ
+    let adjustTimeout: ReturnType<typeof setTimeout> | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+
+    // レイアウトが完了してから初期位置を設定
+    const initScroll = () => {
+      const maxScroll = track.scrollWidth / 2; // 1セット分の幅
+      if (maxScroll > 0 && track.scrollLeft < maxScroll / 2) {
+        track.scrollLeft = maxScroll; // 中央付近に初期位置を設定
+      }
+    };
+
+    // レイアウト完了を待つ
+    if (track.scrollWidth === 0) {
+      resizeObserver = new ResizeObserver(() => {
+        initScroll();
+        resizeObserver?.disconnect();
+      });
+      resizeObserver.observe(track);
+    } else {
+      initScroll();
+    }
+
+    const handleScroll = () => {
+      // ジャンプ中は処理をスキップ
+      if (isAdjusting) return;
+
+      // 既にスケジュール済みの場合はスキップ
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const currentScroll = track.scrollLeft;
+        const maxScroll = track.scrollWidth / 2; // 1セット分の幅
+        const maxScrollable = track.scrollWidth - track.clientWidth; // 実際のスクロール可能な最大位置
+        const threshold = 100; // ジャンプのしきい値（px）
+
+        // スクロール幅が0の場合は処理をスキップ
+        if (maxScroll <= 0) return;
+
+        // 右端に近づいたら左側にジャンプ
+        if (currentScroll >= maxScrollable - threshold) {
+          isAdjusting = true;
+          const newScroll = currentScroll - maxScroll;
+          track.scrollLeft = newScroll;
+          // 少し待ってからフラグをリセット（スクロールイベントの連鎖を防ぐ）
+          if (adjustTimeout) clearTimeout(adjustTimeout);
+          adjustTimeout = setTimeout(() => {
+            isAdjusting = false;
+            adjustTimeout = null;
+          }, 50);
+        }
+        // 左端に近づいたら右側にジャンプ
+        else if (currentScroll <= threshold) {
+          isAdjusting = true;
+          const newScroll = currentScroll + maxScroll;
+          track.scrollLeft = newScroll;
+          // 少し待ってからフラグをリセット（スクロールイベントの連鎖を防ぐ）
+          if (adjustTimeout) clearTimeout(adjustTimeout);
+          adjustTimeout = setTimeout(() => {
+            isAdjusting = false;
+            adjustTimeout = null;
+          }, 50);
+        }
+      });
+    };
+
+    track.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      track.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (adjustTimeout) clearTimeout(adjustTimeout);
+      resizeObserver?.disconnect();
+    };
+  }, [isMobile]);
 
   // ポインター操作（クリック/ドラッグ & スワイプ）でスクロール
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
@@ -96,28 +190,28 @@ export default function TestimonialsMarquee({ items, speed = 40 }: Props) {
     setPaused(false);
   };
 
-  // アイテムを2回並べて無限スクロール
+  // アイテムを2回並べて無限スクロール（PCもモバイルも）
   const doubled = [...items, ...items];
 
   return (
     <section className="w-full py-16" aria-label="お客様の声">
       <div
         ref={trackRef}
-        className="relative w-full overflow-x-auto scrollbar-hide px-4 md:px-6 select-none cursor-grab active:cursor-grabbing"
-        style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch', overscrollBehaviorX: 'contain' as any }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerLeave={endDrag}
-        onPointerCancel={onPointerCancel}
+        className={`relative w-full overflow-x-auto scrollbar-hide px-4 md:px-6 select-none ${isMobile ? '' : 'cursor-grab active:cursor-grabbing'}`}
+        style={{ touchAction: isMobile ? 'pan-x' : 'pan-y', WebkitOverflowScrolling: 'touch', overscrollBehaviorX: 'contain' as any }}
+        onPointerDown={isMobile ? undefined : onPointerDown}
+        onPointerMove={isMobile ? undefined : onPointerMove}
+        onPointerUp={isMobile ? undefined : endDrag}
+        onPointerLeave={isMobile ? undefined : endDrag}
+        onPointerCancel={isMobile ? undefined : onPointerCancel}
       >
         <div className="flex gap-4 min-w-max">
           {doubled.map((t, i) => (
             <article
-              key={i + t.name}
+              key={`${i}-${t.name}`}
               className="shrink-0 w-[320px] md:w-[360px] rounded-2xl border border-black/20 bg-white p-6 shadow-card flex flex-col min-h-[220px] md:min-h-[240px]"
             >
-              <blockquote className="text-[15px] leading-7 text-base-900">“{t.quote}”</blockquote>
+              <blockquote className="text-[15px] leading-7 text-base-900">"{t.quote}"</blockquote>
               <footer className="mt-auto pt-5 flex items-center gap-3">
                 <div className="min-w-0">
                   <div className="truncate font-medium text-base-900">{t.name}</div>
